@@ -87,7 +87,7 @@
 <meta property="og:description" content="马上参加实习了，在实习前把Git的命令系统的看一下，好记性不如烂笔头，方便自己之后查阅">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2018/06/22/Git操作记录/bg2015120901.jpg">
-<meta property="og:updated_time" content="2018-06-22T10:39:42.000Z">
+<meta property="og:updated_time" content="2018-06-22T11:16:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git操作">
 <meta name="twitter:description" content="马上参加实习了，在实习前把Git的命令系统的看一下，好记性不如烂笔头，方便自己之后查阅">
@@ -360,7 +360,18 @@
       
         <p>马上参加实习了，在实习前把Git的命令系统的看一下，好记性不如烂笔头，方便自己之后查阅<br><img src="/2018/06/22/Git操作记录/bg2015120901.jpg" alt=""></p>
 <a id="more"></a>
-<p>参考了<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000" target="_blank" rel="noopener">廖雪峰老师的博客</a><br>Git和其他版本控制系统如SVN的一个不同之处就是有暂存区的概念。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a><strong>概述</strong></h2><p>很多人都知道，Linus在1991年创建了开源的Linux，从此，Linux系统不断发展，已经成为最大的服务器系统软件了。</p>
+<p>Linus虽然创建了Linux，但Linux的壮大是靠全世界热心的志愿者参与的，这么多人在世界各地为Linux编写代码，那Linux的代码是如何管理的呢？</p>
+<p>事实是，在2002年以前，世界各地的志愿者把源代码文件通过diff的方式发给Linus，然后由Linus本人通过手工方式合并代码！</p>
+<p>你也许会想，为什么Linus不把Linux代码放到版本控制系统里呢？不是有CVS、SVN这些免费的版本控制系统吗？因为Linus坚定地反对CVS和SVN，这些集中式的版本控制系统不但速度慢，而且必须联网才能使用。有一些商用的版本控制系统，虽然比CVS、SVN好用，但那是付费的，和Linux的开源精神不符。</p>
+<p>不过，到了2002年，Linux系统已经发展了十年了，代码库之大让Linus很难继续通过手工方式管理了，社区的弟兄们也对这种方式表达了强烈不满，于是Linus选择了一个商业的版本控制系统BitKeeper，BitKeeper的东家BitMover公司出于人道主义精神，授权Linux社区免费使用这个版本控制系统。</p>
+<p>安定团结的大好局面在2005年就被打破了，原因是Linux社区牛人聚集，不免沾染了一些梁山好汉的江湖习气。开发Samba的Andrew试图破解BitKeeper的协议（这么干的其实也不只他一个），被BitMover公司发现了（监控工作做得不错！），于是BitMover公司怒了，要收回Linux社区的免费使用权。</p>
+<p>Linus可以向BitMover公司道个歉，保证以后严格管教弟兄们，嗯，这是不可能的。实际情况是这样的：</p>
+<p>Linus花了两周时间自己用C写了一个分布式版本控制系统，这就是Git！一个月之内，Linux系统的源码已经由Git管理了！牛是怎么定义的呢？大家可以体会一下。</p>
+<p>Git迅速成为最流行的分布式版本控制系统，尤其是2008年，GitHub网站上线了，它为开源项目免费提供Git存储，无数开源项目开始迁移至GitHub，包括jQuery，PHP，Ruby等等。</p>
+<p>历史就是这么偶然，如果不是当年BitMover公司威胁Linux社区，可能现在我们就没有免费而超级好用的Git了。</p>
+<p>以上内容参考了<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000" target="_blank" rel="noopener">廖雪峰老师的博客</a></p>
+<p>Git和其他版本控制系统如SVN的一个不同之处就是有暂存区的概念。</p>
 <p><strong>工作区（Working Directory）</strong></p>
 <p>就是你在电脑里能看到的目录，比如我的git文件夹就是一个工作区，它可以是一个文件。</p>
 <p><strong>版本库（Repository）</strong></p>
@@ -369,7 +380,10 @@
 <p>也就是公司使用的gitlab，或者github</p>
 <p>Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。</p>
 <p>把大象放入冰箱需要三部操作，而把本地仓库放到git需要两步，我们的工作区通过git add之后，把文件加入到暂存区，这时候可以add多个，之后通过git commit提交到git仓库中，再提交到远程仓库的时候使用push</p>
-<p><strong>Git配置</strong><br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示当前的Git配置，分支追踪关系等等</span></span><br><span class="line">$ git<span class="built_in"> config </span>--list</span><br><span class="line"><span class="keyword">for</span>(int i = 0;i&lt;1;i++)&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Git配置"><a href="#Git配置" class="headerlink" title="Git配置"></a><strong>Git配置</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 显示当前的Git配置，分支追踪关系等等</span><br><span class="line">$ git config --list</span><br><span class="line"></span><br><span class="line"># 设置提交代码时的用户信息，注意：加--global，表示全局，否则为当前项目</span><br><span class="line">$ git config [--global] user.name &quot;name&quot;</span><br><span class="line">$ git config [--global] user.email &quot;email address&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="增加-提交文件"><a href="#增加-提交文件" class="headerlink" title="增加/提交文件"></a><strong>增加/提交文件</strong></h2><h3 id="增加文件"><a href="#增加文件" class="headerlink" title="增加文件"></a><strong>增加文件</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 添加当前目录的所有文件到暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加指定文件到暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add [file1] [file2] ...</span></span><br></pre></td></tr></table></figure>
+<h3 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a><strong>提交文件</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 提交暂存区到仓库区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用一次新的commit，替代上一次提交</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果代码没有任何新变化，则用来改写上一次commit的提交信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit --amend -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 还有可以修改上次提交author和committor信息</span></span><br></pre></td></tr></table></figure>
+<h2 id="增加远程仓库"><a href="#增加远程仓库" class="headerlink" title="增加远程仓库"></a><strong>增加远程仓库</strong></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 增加一个新的远程仓库，并命名，比如：</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git remote add origin ssh://xxx.xx.xx/xx.git</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote add [shortname] [url]</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -454,8 +468,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -519,6 +542,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git配置"><span class="nav-number">2.</span> <span class="nav-text">Git配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增加-提交文件"><span class="nav-number">3.</span> <span class="nav-text">增加/提交文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#增加文件"><span class="nav-number">3.1.</span> <span class="nav-text">增加文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交文件"><span class="nav-number">3.2.</span> <span class="nav-text">提交文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增加远程仓库"><span class="nav-number">4.</span> <span class="nav-text">增加远程仓库</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
