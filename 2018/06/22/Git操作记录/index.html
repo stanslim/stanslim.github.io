@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="马上参加实习了，在实习前把Git的命令系统的看一下，好记性不如烂笔头，方便自己之后查阅">
+<meta name="description" content="关于Kubernetes和微服务的一些理解">
 <meta name="keywords" content="git命令">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git操作">
 <meta property="og:url" content="http://yoursite.com/2018/06/22/Git操作记录/index.html">
 <meta property="og:site_name" content="Zy Wang&#39;s Blog">
-<meta property="og:description" content="马上参加实习了，在实习前把Git的命令系统的看一下，好记性不如烂笔头，方便自己之后查阅">
+<meta property="og:description" content="关于Kubernetes和微服务的一些理解">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2018/06/22/Git操作记录/bg2015120901.jpg">
-<meta property="og:updated_time" content="2018-06-23T08:48:37.000Z">
+<meta property="og:updated_time" content="2018-12-03T02:19:25.212Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git操作">
-<meta name="twitter:description" content="马上参加实习了，在实习前把Git的命令系统的看一下，好记性不如烂笔头，方便自己之后查阅">
+<meta name="twitter:description" content="关于Kubernetes和微服务的一些理解">
 <meta name="twitter:image" content="http://yoursite.com/2018/06/22/Git操作记录/bg2015120901.jpg">
 
 
@@ -310,8 +310,8 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-06-23T16:48:37+08:00">
-                2018-06-23
+              <time title="Post modified" itemprop="dateModified" datetime="2018-12-03T10:19:25+08:00">
+                2018-12-03
               </time>
             
           </span>
@@ -371,7 +371,7 @@
       
 
       
-        <p>马上参加实习了，在实习前把Git的命令系统的看一下，好记性不如烂笔头，方便自己之后查阅<br><img src="/2018/06/22/Git操作记录/bg2015120901.jpg" alt=""></p>
+        <p>关于Kubernetes和微服务的一些理解<br><img src="/2018/06/22/Git操作记录/bg2015120901.jpg" alt=""></p>
 <a id="more"></a>
 <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a><strong>概述</strong></h2><p>很多人都知道，Linus在1991年创建了开源的Linux，从此，Linux系统不断发展，已经成为最大的服务器系统软件了。</p>
 <p>Linus虽然创建了Linux，但Linux的壮大是靠全世界热心的志愿者参与的，这么多人在世界各地为Linux编写代码，那Linux的代码是如何管理的呢？</p>
@@ -408,7 +408,7 @@
 <h2 id="标签管理"><a href="#标签管理" class="headerlink" title="标签管理"></a><strong>标签管理</strong></h2><p>标签其中一个用处是用来标记一些版本信息，比如在master分支上打上v1.0、v1.1等版本信息，这样版本更新信息一目了然。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在当前commit上添加标签tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag v1.0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以指定给之前的commit添加tag，commit_id用commit号前几位就行（4位好像可以）</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag v0.9 commit_id</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认情况下，git push 并不会把标签传送到远端服务器上，只有通过显式命令才能分享标签到远端仓库。其命令格式如同推送分支，运行 git push origin [tagname] 即可：</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin v1.1.0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者一次性推送所有新增的标签</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin --tags</span></span><br></pre></td></tr></table></figure>
 <h2 id="储藏"><a href="#储藏" class="headerlink" title="储藏"></a><strong>储藏</strong></h2><p>经常有这样的事情发生，当你正在进行项目中某一部分的工作，里面的东西处于一个比较杂乱的状态，而你想转到其他分支上进行一些工作。问题是，你不想提交进行了一半的工作，否则以后你无法回到这个工作点。解决这个问题的办法就是git stash命令。</p>
-<p>“‘储藏”“可以获取你工作目录的中间状态——也就是你修改过的「被追踪」的文件和暂存的变更——并将它保存到一个未完结变更的堆栈中，随时可以重新应用。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将追踪过得文件的变更存入堆栈</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看堆栈中所有的储藏记录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash list</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 取出刚刚存入堆栈的变更(也就是栈顶的储藏)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash pop</span></span><br><span class="line"></span><br><span class="line">`</span><br></pre></td></tr></table></figure></p>
+<p>“‘储藏”“可以获取你工作目录的中间状态——也就是你修改过的「被追踪」的文件和暂存的变更——并将它保存到一个未完结变更的堆栈中，随时可以重新应用。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将追踪过得文件的变更存入堆栈</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看堆栈中所有的储藏记录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash list</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 取出刚刚存入堆栈的变更(也就是栈顶的储藏)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash pop</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a><strong>撤销</strong></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 修改了一些文件,还没add放入暂存区，这时可以checkout，就是按照暂存区的文件来恢复工作区，使得工作区文件于暂存区文件保持一致。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git checkout . 表示恢复所有文件。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout .</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复暂存区的指定文件到工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout [file]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 另外一种情况，假如我不小心add到了暂存区，但是还没commit，这时候想恢复暂存区，就需要重置暂存区了。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果不是想与上一次commit保持一致，而是某个指定的commit，同时重置暂存区，但工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 再一种情况，直接是工作区的修改都想重置了，这种情况一般要小心，因为你没提交的工作区的修改很有可能就没有了，因为不仅仅是暂存区被重置，还有工作区也会被重置。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置【暂存区与工作区】，与上一次commit保持一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard [commit]</span></span><br></pre></td></tr></table></figure>
 <p>-EOF-</p>
 
@@ -556,7 +556,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
