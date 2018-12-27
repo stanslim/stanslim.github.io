@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Ubuntu 16.04 安装Docker 和 Kubernetes安装Docker方法一：配置docker-ce的镜像源 123sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-commoncurl -fsSL https://mirrors.ustc.edu.cn/docke">
+<meta name="description" content="Ubuntu 16.04 安装Docker 和 Kubernetes在部署docker和kubernetes的时候，最大的坑就是pull kubernetes的镜像源的时候拉不下来，最后在实验室同学的帮助下找到了国内的一个镜像源终于pull下来，另一个大坑就是部署master节点的时候，两个DNS的包一直不能running，原因是kubernetes低版本还有一个bug，需要手动删除一行代码，最新">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ubuntu16.04部署k8s踩过的坑">
 <meta property="og:url" content="http://yoursite.com/2018/12/27/Ubuntu16-04部署k8s踩过的坑/index.html">
 <meta property="og:site_name" content="Zy Wang&#39;s Blog">
-<meta property="og:description" content="Ubuntu 16.04 安装Docker 和 Kubernetes安装Docker方法一：配置docker-ce的镜像源 123sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-commoncurl -fsSL https://mirrors.ustc.edu.cn/docke">
+<meta property="og:description" content="Ubuntu 16.04 安装Docker 和 Kubernetes在部署docker和kubernetes的时候，最大的坑就是pull kubernetes的镜像源的时候拉不下来，最后在实验室同学的帮助下找到了国内的一个镜像源终于pull下来，另一个大坑就是部署master节点的时候，两个DNS的包一直不能running，原因是kubernetes低版本还有一个bug，需要手动删除一行代码，最新">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-27T01:21:34.282Z">
+<meta property="og:updated_time" content="2018-12-27T01:30:39.451Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu16.04部署k8s踩过的坑">
-<meta name="twitter:description" content="Ubuntu 16.04 安装Docker 和 Kubernetes安装Docker方法一：配置docker-ce的镜像源 123sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-commoncurl -fsSL https://mirrors.ustc.edu.cn/docke">
+<meta name="twitter:description" content="Ubuntu 16.04 安装Docker 和 Kubernetes在部署docker和kubernetes的时候，最大的坑就是pull kubernetes的镜像源的时候拉不下来，最后在实验室同学的帮助下找到了国内的一个镜像源终于pull下来，另一个大坑就是部署master节点的时候，两个DNS的包一直不能running，原因是kubernetes低版本还有一个bug，需要手动删除一行代码，最新">
 
 
 
@@ -307,7 +307,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2018-12-27T09:21:34+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2018-12-27T09:30:39+08:00">
                 2018-12-27
               </time>
             
@@ -346,7 +346,10 @@
       
 
       
-        <h2 id="Ubuntu-16-04-安装Docker-和-Kubernetes"><a href="#Ubuntu-16-04-安装Docker-和-Kubernetes" class="headerlink" title="Ubuntu 16.04 安装Docker 和 Kubernetes"></a>Ubuntu 16.04 安装Docker 和 Kubernetes</h2><h3 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h3><h5 id="方法一："><a href="#方法一：" class="headerlink" title="方法一："></a>方法一：</h5><p>配置docker-ce的镜像源</p>
+        <h2 id="Ubuntu-16-04-安装Docker-和-Kubernetes"><a href="#Ubuntu-16-04-安装Docker-和-Kubernetes" class="headerlink" title="Ubuntu 16.04 安装Docker 和 Kubernetes"></a>Ubuntu 16.04 安装Docker 和 Kubernetes</h2><p>在部署docker和kubernetes的时候，最大的坑就是pull kubernetes的镜像源的时候拉不下来，最后在实验室同学的帮助下找到了国内的一个镜像源终于pull下来，另一个大坑就是部署master节点的时候，两个DNS的包一直不能running，原因是kubernetes低版本还有一个bug，需要手动删除一行代码，最新版本的k8s已经修复了这个bug</p>
+<p>另外注意，在Ubuntu的环境下，Docker，kubeadm这些的版本自己一定要记好，有时候版本不对也是要出问题的</p>
+<a id="more"></a>
+<h3 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h3><h5 id="方法一："><a href="#方法一：" class="headerlink" title="方法一："></a>方法一：</h5><p>配置docker-ce的镜像源</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common</span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line">sudo apt update</span><br></pre></td></tr></table></figure>
 <p>安装docker-ce软件包</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install docker-ce</span><br></pre></td></tr></table></figure>
@@ -425,8 +428,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/12/01/kuberbetes支持GPU应用的理解以及Device Plugin机制的原理/" rel="next" title="Kubernetes GPU管理与Device Plugin机制">
-                <i class="fa fa-chevron-left"></i> Kubernetes GPU管理与Device Plugin机制
+              <a href="/2018/12/01/对Docker和kubernetes的一些理解/" rel="next" title="关于k8s以及微服务自己的理解">
+                <i class="fa fa-chevron-left"></i> 关于k8s以及微服务自己的理解
               </a>
             
           </div>
