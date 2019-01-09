@@ -262,6 +262,175 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/09/k8s识别mlu100计算卡小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王振宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zy Wang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/09/k8s识别mlu100计算卡小结/" itemprop="url">k8s识别mlu100计算卡小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-09T10:20:49+08:00">
+                2019-01-09
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2019-01-09T10:20:49+08:00">
+                2019-01-09
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <a id="more"></a>
+<p>目前的情况来看，k8s已经可以自动调度本地开发的mlu-device-plugin并且识别到mlu板卡</p>
+<p>在这个调试过程中，最先开始没有用k8s直接调度，是使用本地镜像通过docker run来试运行，在宿主机运行的时候，需要加上两个参数，一个是–device，用来让docker识别到设备，另一个是-v 需要在/var/lib下创建kubelet文件，这个文件是在插件中，与k8s相互通信的socket文件存储位置，如果没有的话会报错，fswatcher创建失败，另外，因为在代码中用到了两个寒武纪的库文件，一个是cndev获取设备静态信息库，另一个是cnrt运行库文件<br>在代码中使用dlopen函数动态加载库：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">handle</span> = dlopen(<span class="string">"libcndev_1.1.0.so"</span>, RTLD_LAZY | RTLD_GLOBAL);</span><br><span class="line"><span class="attribute">handle</span> = dlopen(<span class="string">"libcnrt_3.7.0.so"</span>, RTLD_LAZY | RTLD_GLOBAL);</span><br></pre></td></tr></table></figure></p>
+<p>所以在运行docker之后把这两个文件拷贝到容器内的/usr/lib/中去<br>具体命令如下<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>.sudo docker run --device /dev/cambricon_c10Dev0 --device /dev/cnmon_dev -v /var/<span class="class"><span class="keyword">lib</span>/<span class="title">kubelet</span> -<span class="title">it</span> &lt;<span class="title">imagesID</span>&gt; /<span class="title">bin</span>/<span class="title">bash</span></span></span><br><span class="line"><span class="number">2</span>.sudo docker cp /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">libcnrt_3</span>.7.0.<span class="title">so</span> &lt;<span class="title">containerId</span>&gt;:/<span class="title">usr</span>/<span class="title">lib</span>/</span></span><br><span class="line"><span class="number">3</span>.sudo docker cp/usr/<span class="class"><span class="keyword">lib</span>/<span class="title">libcndev_1</span>.1.0/<span class="title">so</span> &lt;<span class="title">containerId</span>&gt;:/<span class="title">usr</span>/<span class="title">lib</span>/</span></span><br></pre></td></tr></table></figure></p>
+<p>这样做是十分麻烦的，并且留下另一个问题，就是k8s直接调度的时候如何把我们需要的库文件，以及启动参数加入进去</p>
+<p>其中，库文件的拷贝，/var/lib/kubelet的挂载在dockerfile实现，–divice参数识别设备在k8s创建pods的yaml文件中实现<br>dockerfile：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">FROM cambricon/<span class="symbol">test:</span>v4.<span class="number">1</span> <span class="keyword">as</span> build</span><br><span class="line"></span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends \</span><br><span class="line">        g++ \</span><br><span class="line">        ca-certificates \</span><br><span class="line">        wget &amp;&amp; \</span><br><span class="line">    rm -rf /var/<span class="class"><span class="keyword">lib</span>/<span class="title">apt</span>/<span class="title">lists</span>/*</span></span><br><span class="line"></span><br><span class="line">ENV GOLANG_VERSION <span class="number">1.10</span>.<span class="number">3</span></span><br><span class="line">ENV GOPATH /go</span><br><span class="line">ENV PATH $GOPATH/<span class="symbol">bin:</span>/usr/local/go/<span class="symbol">bin:</span>$PATH</span><br><span class="line"></span><br><span class="line">RUN wget -nv -O - <span class="symbol">https:</span>/<span class="regexp">/studygolang.com/dl</span><span class="regexp">/golang/go</span>1.<span class="number">10.3</span>.linux-amd64.tar.gz \</span><br><span class="line">    | tar -C /usr/local -xz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">WORKDIR /go/src/k8s-device-plugin</span><br><span class="line">COPY . .</span><br><span class="line"></span><br><span class="line">RUN export CGO_LDFLAGS_ALLOW=<span class="string">'-Wl,--unresolved-symbols=ignore-in-object-files'</span> &amp;&amp; \</span><br><span class="line">   go install -ldflags=<span class="string">"-s -w"</span> -v k8s-device-plugin</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">FROM <span class="symbol">debian:</span>stretch-slim</span><br><span class="line">COPY --chown=<span class="number">777</span> libcndev_1.<span class="number">1.0</span>.so /usr/<span class="class"><span class="keyword">lib</span>/</span></span><br><span class="line">COPY --chown=<span class="number">777</span> libcnrt_3.<span class="number">7.0</span>.so /usr/<span class="class"><span class="keyword">lib</span>/</span></span><br><span class="line"></span><br><span class="line">VOLUME /var/<span class="class"><span class="keyword">lib</span>/<span class="title">kubelet</span> /<span class="title">var</span>/<span class="title">lib</span>/<span class="title">kubelet</span></span></span><br><span class="line"><span class="comment">#VOLUME /dev/cambricon_c10Dev0 /dev/cambricon_c10Dev0</span></span><br><span class="line"><span class="comment">#VOLUME /dev/cnmon_dev /dev/cnmon_dev</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#ENV NVIDIA_VISIBLE_DEVICES=all</span></span><br><span class="line"><span class="comment">#ENV NVIDIA_DRIVER_CAPABILITIES=utility</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">COPY --from=build /go/bin/k8s-device-plugin /usr/bin/k8s-device-plugin</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">CMD [<span class="string">"k8s-device-plugin"</span>]</span><br></pre></td></tr></table></figure></p>
+<p>可以看到在第25，26行中把两个库文件拷贝到了/var/lib中<br>在28行挂载了volume /var/lib/kubelet</p>
+<p>项目github地址为<a href="mailto:git@172.16.70.209" target="_blank" rel="noopener">git@172.16.70.209</a>:stanslim/k8s-device-plugin-mlu100.git</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">git clone git@<span class="number">172.16</span><span class="number">.70</span><span class="number">.209</span>:stanslim/k8s-device-plugin-mlu100.git</span><br><span class="line"></span><br><span class="line">docker build -t <span class="params">&lt;自己起的镜像名字，在yml中使用&gt;</span> .</span><br><span class="line"></span><br><span class="line">docker images <span class="comment">//查看所有镜像</span></span><br><span class="line"></span><br><span class="line">docker ps <span class="comment">//查看所有运行中的容器</span></span><br><span class="line"></span><br><span class="line">docker ps -a <span class="comment">//查看所有容器</span></span><br><span class="line"></span><br><span class="line">docker  rm <span class="params">&lt;id&gt;</span><span class="comment">//删除容器</span></span><br><span class="line"></span><br><span class="line">docker stop <span class="params">&lt;id&gt;</span><span class="comment">//停止容器</span></span><br><span class="line"></span><br><span class="line">docker rmi <span class="params">&lt;id&gt;</span><span class="comment">//删除镜像</span></span><br></pre></td></tr></table></figure>
+<p>再来看yaml文件<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DaemonSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">my-mlu-device-plugin</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">kube-system</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line">      <span class="comment"># Mark this pod as a critical add-on; when enabled, the critical add-on scheduler</span></span><br><span class="line">      <span class="comment"># reserves resources for critical add-on pods so that they can be rescheduled after</span></span><br><span class="line">      <span class="comment"># a failure.  This annotation works in tandem with the toleration below.</span></span><br><span class="line"><span class="attr">      annotations:</span></span><br><span class="line">        <span class="string">scheduler.alpha.kubernetes.io/critical-pod:</span> <span class="string">""</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">mlu-device-plugin-ds</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      tolerations:</span></span><br><span class="line">      <span class="comment"># Allow this pod to be rescheduled while the node is in "critical add-ons only" mode.</span></span><br><span class="line">      <span class="comment"># This, along with the annotation above marks this pod as a critical add-on.</span></span><br><span class="line"><span class="attr">      - key:</span> <span class="string">CriticalAddonsOnly</span></span><br><span class="line"><span class="attr">        operator:</span> <span class="string">Exists</span></span><br><span class="line"><span class="attr">      - key:</span> <span class="string">cambricon.com/mlu</span></span><br><span class="line"><span class="attr">        operator:</span> <span class="string">Exists</span></span><br><span class="line"><span class="attr">        effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - image:</span> <span class="string">&lt;之前起的镜像名字&gt;</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">mlu-device-plugin-ctr</span></span><br><span class="line"><span class="attr">        securityContext:</span></span><br><span class="line"><span class="attr">          privileged:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">          allowPrivilegeEscalation:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">          capabilities:</span></span><br><span class="line"><span class="attr">            drop:</span> <span class="string">["ALL"]</span></span><br><span class="line"><span class="attr">        volumeMounts:</span></span><br><span class="line"><span class="attr">          - name:</span> <span class="string">device-plugin</span></span><br><span class="line"><span class="attr">            mountPath:</span> <span class="string">/var/lib/kubelet/device-plugins</span></span><br><span class="line"><span class="attr">      volumes:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">device-plugin</span></span><br><span class="line"><span class="attr">          hostPath:</span></span><br><span class="line"><span class="attr">            path:</span> <span class="string">/var/lib/kubelet/device-plugins</span></span><br></pre></td></tr></table></figure></p>
+<p>在29行中设置了privileged关键字，使得dokcer可以识别设备</p>
+<p>按照这个yml文件创建的pod，实现了k8s对mlu100板卡的识别<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f <span class="tag">&lt;<span class="name">yml文件</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>创建之后可以查看节点来监测是否识别到mlu计算卡<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe <span class="keyword">node</span> <span class="title">&lt;节点名称&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>查看pod运行状态<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl <span class="keyword">get</span> pods <span class="comment">--all-namespaces</span></span><br></pre></td></tr></table></figure></p>
+<p>如果遇到问题，可以通过查看pod的日志排查问题<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs <span class="tag">&lt;<span class="name">pod名称</span>&gt;</span> -n <span class="tag">&lt;<span class="name">命名空间</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>-EOF-</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/27/Ubuntu16-04部署k8s踩过的坑/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -350,165 +519,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/12/27/Ubuntu16-04部署k8s踩过的坑/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/对Docker和kubernetes的一些理解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="王振宇">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Zy Wang's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/01/对Docker和kubernetes的一些理解/" itemprop="url">关于k8s以及微服务自己的理解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T21:25:35+08:00">
-                2018-12-01
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Post modified&#58;</span>
-              
-              <time title="Post modified" itemprop="dateModified" datetime="2018-12-12T09:06:39+08:00">
-                2018-12-12
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术/" itemprop="url" rel="index">
-                    <span itemprop="name">技术</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>实验室二期要基于寒武纪MLU100和NVIDIA GPU搭建一个完整的云计算平台</p>
-<p>因为接触容器及微服务等概念时间较短，以下是这几天查完资料后，自己关于Kubernetes和微服务的一些理解以及自己的一些思考过程</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/12/01/对Docker和kubernetes的一些理解/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -668,6 +678,165 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/12/01/kuberbetes支持GPU应用的理解以及Device Plugin机制的原理/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/对Docker和kubernetes的一些理解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王振宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zy Wang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/01/对Docker和kubernetes的一些理解/" itemprop="url">关于k8s以及微服务自己的理解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T21:25:35+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-12-12T09:06:39+08:00">
+                2018-12-12
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>实验室二期要基于寒武纪MLU100和NVIDIA GPU搭建一个完整的云计算平台</p>
+<p>因为接触容器及微服务等概念时间较短，以下是这几天查完资料后，自己关于Kubernetes和微服务的一些理解以及自己的一些思考过程</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/01/对Docker和kubernetes的一些理解/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1340,7 +1509,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1362,7 +1531,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
