@@ -380,7 +380,7 @@
 <p>容器技术，产生与Paas技术的普及</p>
 <p>具体什么是paas技术，我的理解是平台及服务（Platform-as-a-Service），也就是说我们的给用户的服务就是我们的平台，用户可以在我们的平台上部署他们自己的应用，而我们的平台要解决的就是，如何提供给这些用户他们所需要的运行环境。</p>
 <p>在原先没有docker的时候，paas使用的是应用打包的方法，用户把自己的应用（每一种语言，每一个框架）打包上传到集群里面去，部署的时候很简单，但是打包的过程的坑十分的多（具体有什么坑因为没有实际操作过还不清楚，只是看到资料里面说坑很多），甚至每一个版本更新之后都需要重新打包</p>
-<p>并且，使用虚拟化的paas本身虚拟机就要占内存，可想而知如果在部署多个虚拟机同时跑应用的时候，性能消耗之大。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> paas应用一键部署命令</span></span><br><span class="line"></span><br><span class="line">cf push</span><br></pre></td></tr></table></figure></p>
+<p>并且，使用虚拟化的paas本身虚拟机就要占内存，可想而知如果在部署多个虚拟机同时跑应用的时候，性能消耗之大。<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># paas应用一键部署命令</span></span><br><span class="line"></span><br><span class="line">cf <span class="keyword">push</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="Docker-容器"><a href="#Docker-容器" class="headerlink" title="Docker(容器)"></a><strong>Docker(容器)</strong></h3><p>而Docker 镜像解决的，恰恰就是打包这个根本性的问题。所谓Docker的镜相，就是一个完整操作系统的所有文件和目录构成的压缩包，这个压缩包包含了完整的操作系统文件和目录，也就是包含了这个应用所需要的所有依赖</p>
 <p>这里有一个问题是，既然打包了整个操作系统，如果一台机器上跑n个docker镜像，那意味着有n个操作系统运行在这台机器上，那每个docker所能获取到的资源是不是就很有限了，比如内存、cpu、文件描述符等等</p>
 <p>其实这里是只打包了文件系统，包含着你的应用依赖，不包括操作系统内核。</p>
