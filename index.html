@@ -309,7 +309,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2019-02-01T13:54:51+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2019-02-01T14:02:49+08:00">
                 2019-02-01
               </time>
             
@@ -506,7 +506,7 @@
       
         
           <p>目前的情况来看，k8s已经可以自动调度本地开发的mlu-device-plugin并且识别到mlu板卡</p>
-<p>在这个调试过程中，最先开始没有用k8s直接调度，是使用本地镜像通过docker run来试运行，在宿主机运行的时候，需要加上两个参数，一个是–device，用来让docker识别到设备，另一个是-v 需要在/var/lib下创建kubelet文件，这个文件是在插件中，与k8s相互通信的socket文件存储位置，如果没有的话会报错，fswatcher创建失败，另外，因为在代码中用到了两个寒武纪的库文件，一个是cndev获取设备静态信息库，另一个是cnrt运行库文件<br>在代码中使用dlopen函数动态加载库：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">handle</span> = dlopen(<span class="string">"libcndev_1.1.0.so"</span>, RTLD_LAZY | RTLD_GLOBAL);</span><br><span class="line"><span class="attribute">handle</span> = dlopen(<span class="string">"libcnrt_3.7.0.so"</span>, RTLD_LAZY | RTLD_GLOBAL);</span><br></pre></td></tr></table></figure></p>
+<p>在这个调试过程中，最先开始没有用k8s直接调度，是使用本地镜像通过docker run来试运行，在宿主机运行的时候，需要加上两个参数，一个是—device，用来让docker识别到设备，另一个是-v 需要在/var/lib下创建kubelet文件，这个文件是在插件中，与k8s相互通信的socket文件存储位置，如果没有的话会报错，fswatcher创建失败，另外，因为在代码中用到了两个寒武纪的库文件，一个是cndev获取设备静态信息库，另一个是cnrt运行库文件<br>在代码中使用dlopen函数动态加载库：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">handle</span> = dlopen(<span class="string">"libcndev_1.1.0.so"</span>, RTLD_LAZY | RTLD_GLOBAL);</span><br><span class="line"><span class="attribute">handle</span> = dlopen(<span class="string">"libcnrt_3.7.0.so"</span>, RTLD_LAZY | RTLD_GLOBAL);</span><br></pre></td></tr></table></figure></p>
 <p>所以在运行docker之后把这两个文件拷贝到容器内的/usr/lib/中去</p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1901,6 +1901,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 

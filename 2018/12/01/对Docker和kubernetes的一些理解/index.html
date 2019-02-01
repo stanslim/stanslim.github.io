@@ -380,7 +380,7 @@
 <p>容器技术，产生与Paas技术的普及</p>
 <p>具体什么是paas技术，我的理解是平台及服务（Platform-as-a-Service），也就是说我们的给用户的服务就是我们的平台，用户可以在我们的平台上部署他们自己的应用，而我们的平台要解决的就是，如何提供给这些用户他们所需要的运行环境。</p>
 <p>在原先没有docker的时候，paas使用的是应用打包的方法，用户把自己的应用（每一种语言，每一个框架）打包上传到集群里面去，部署的时候很简单，但是打包的过程的坑十分的多（具体有什么坑因为没有实际操作过还不清楚，只是看到资料里面说坑很多），甚至每一个版本更新之后都需要重新打包</p>
-<p>并且，使用虚拟化的paas本身虚拟机就要占内存，可想而知如果在部署多个虚拟机同时跑应用的时候，性能消耗之大。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> paas应用一键部署命令</span></span><br><span class="line"></span><br><span class="line">cf push</span><br></pre></td></tr></table></figure></p>
+<p>并且，使用虚拟化的paas本身虚拟机就要占内存，可想而知如果在部署多个虚拟机同时跑应用的时候，性能消耗之大。<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># paas应用一键部署命令</span></span><br><span class="line"></span><br><span class="line">cf <span class="keyword">push</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="Docker-容器"><a href="#Docker-容器" class="headerlink" title="Docker(容器)"></a><strong>Docker(容器)</strong></h3><p>而Docker 镜像解决的，恰恰就是打包这个根本性的问题。所谓Docker的镜相，就是一个完整操作系统的所有文件和目录构成的压缩包，这个压缩包包含了完整的操作系统文件和目录，也就是包含了这个应用所需要的所有依赖</p>
 <p>这里有一个问题是，既然打包了整个操作系统，如果一台机器上跑n个docker镜像，那意味着有n个操作系统运行在这台机器上，那每个docker所能获取到的资源是不是就很有限了，比如内存、cpu、文件描述符等等</p>
 <p>其实这里是只打包了文件系统，包含着你的应用依赖，不包括操作系统内核。</p>
@@ -411,7 +411,7 @@
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="builtin-name">run</span> <span class="attribute">--net</span>=B <span class="attribute">--volumes-from</span>=B <span class="attribute">--name</span>=A image-A <span class="built_in">..</span>.</span><br></pre></td></tr></table></figure>
 <p>为什么要多这一个中间的容器呢，因为如果没有这个最先创建的容器作为中间容器让其他容器挂载，那么在创建Pod的时候，就需要用我们自己的容器对象来作为挂载者了，这样的话在一个Pod里面，每个容器就不是对等关系了，就成了有先有后的拓扑关系</p>
 <p>而这个infra容器他的消耗资源是很小的，这都是人家k8s设计好的。</p>
-<p>##总结心得<br>1.在之后我们自己部署和设计Pod的时候，到底哪些容器设计成一个Pod，目前的理解是，如果把kubernetes看成一个大的操作系统的话，每一个Pod应该就是在传统环境部署里面的“虚拟机”，而Pod里面的每一个容器应该就是运行在“这个机器”里面的用户进程，所以说，但凡是网络，调度，存储等等相关的属性都是属于Pod层面上的。</p>
+<h2 id="总结心得"><a href="#总结心得" class="headerlink" title="总结心得"></a>总结心得</h2><p>1.在之后我们自己部署和设计Pod的时候，到底哪些容器设计成一个Pod，目前的理解是，如果把kubernetes看成一个大的操作系统的话，每一个Pod应该就是在传统环境部署里面的“虚拟机”，而Pod里面的每一个容器应该就是运行在“这个机器”里面的用户进程，所以说，但凡是网络，调度，存储等等相关的属性都是属于Pod层面上的。</p>
 <p>-EOF-</p>
 
       
@@ -591,7 +591,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-容器"><span class="nav-number">1.1.</span> <span class="nav-text">Docker(容器)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cgroups（Linux-control-Group）"><span class="nav-number">1.1.1.</span> <span class="nav-text">Cgroups（Linux control Group）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kubernetes-1"><span class="nav-number">1.2.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Pod"><span class="nav-number">1.2.1.</span> <span class="nav-text">Pod</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-容器"><span class="nav-number">1.1.</span> <span class="nav-text">Docker(容器)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cgroups（Linux-control-Group）"><span class="nav-number">1.1.1.</span> <span class="nav-text">Cgroups（Linux control Group）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kubernetes-1"><span class="nav-number">1.2.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Pod"><span class="nav-number">1.2.1.</span> <span class="nav-text">Pod</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结心得"><span class="nav-number">2.</span> <span class="nav-text">总结心得</span></a></li></ol></div>
             
 
           </div>
@@ -818,6 +818,8 @@
   
 
   
+  
+
 
   
 
