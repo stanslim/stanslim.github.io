@@ -87,7 +87,8 @@
 <meta property="og:description" content="一直以来，我对数学，物理，天文学等自然科学带有一种敬畏之心 几年前，“数学之美”系列文章原刊载于谷歌黑板报，获得上百万次点击，读了“数学之美”，才发现大学时学的数学知识，比如马尔可夫链、矩阵计算，甚至余弦函数原来都如此亲切，并且栩栩如生，才发现自然语言和信息处理这么有趣。 于是作为一个毫无疑问的菜鸟，从最最基础的质因数分解开始，记录一直以来让我困惑的量子，以及量子到底是用来干什么的">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/roman-mager-59976-unsplash.jpg">
-<meta property="og:updated_time" content="2019-02-03T02:39:32.382Z">
+<meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/WechatIMG137.png">
+<meta property="og:updated_time" content="2019-02-04T07:48:22.704Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从数学之美，到量子世界">
 <meta name="twitter:description" content="一直以来，我对数学，物理，天文学等自然科学带有一种敬畏之心 几年前，“数学之美”系列文章原刊载于谷歌黑板报，获得上百万次点击，读了“数学之美”，才发现大学时学的数学知识，比如马尔可夫链、矩阵计算，甚至余弦函数原来都如此亲切，并且栩栩如生，才发现自然语言和信息处理这么有趣。 于是作为一个毫无疑问的菜鸟，从最最基础的质因数分解开始，记录一直以来让我困惑的量子，以及量子到底是用来干什么的">
@@ -309,8 +310,8 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2019-02-03T10:39:32+08:00">
-                2019-02-03
+              <time title="Post modified" itemprop="dateModified" datetime="2019-02-04T15:48:22+08:00">
+                2019-02-04
               </time>
             
           </span>
@@ -354,9 +355,29 @@
 <p><img src="/2019/01/31/从数学之美，到量子世界/roman-mager-59976-unsplash.jpg" alt=""></p>
 <a id="more"></a>
 <h2 id="关于质因数分解"><a href="#关于质因数分解" class="headerlink" title="关于质因数分解"></a>关于质因数分解</h2><p>说密码学与数学紧密相关，利用数学使密码无法求解</p>
-<p>事实上，在密码学中，大多数情况下是有解的，只不过破解需要大量的时间，时间大到将世界上所有计算机的计算资源加起来计算还需要亿年</p>
+<p>事实上，在密码学中，大多数情况下是有解的，只不过破解需要大量的时间</p>
 <p>而密码学最基础的RSA算法运用的思想，就是质因数分解</p>
+<p>什么是质因数分解？</p>
 <p>找出两个随机的质数<script type="math/tex">p1,p2</script>,求得他们的积<script type="math/tex">n=p1*p2</script></p>
+<p>现在反过来，给你一个刚刚这个n，让你找出是由哪两个质数相乘的到的它，也就是说，需要你找出这个<script type="math/tex">p1,p2</script></p>
+<p>如果这个n很小，比如n=21,你可以很容易的分解他21=3*7，<script type="math/tex">p1,p2</script>找到了，等于3和7，如果这个n很大呢，手算是没戏了，你需要借助计算机，一个一个的相乘，看哪两个质数相乘得n</p>
+<p>而对于这个问题，即使是计算机，所需要的时间都要d大到将世界上所有计算机的计算资源加起来计算<br>还需要几万亿年吧</p>
+<p>这么简单的，初中就学过的概念，应用在生活中就是现在各大银行使用的保密算法的基石，并且无解</p>
+<h2 id="关于密码学"><a href="#关于密码学" class="headerlink" title="关于密码学"></a>关于密码学</h2><p>密码学，就是锁和钥匙</p>
+<p>在密码学中的两大分类，对称算法和非对称算法</p>
+<h3 id="关于对称算法"><a href="#关于对称算法" class="headerlink" title="关于对称算法"></a>关于对称算法</h3><p>有俩人A要给B发消息，黑客C在网络想要监听A给B发的是什么消息</p>
+<p>所以A和B要想办法加密这条信息，防止C偷听</p>
+<p>古典的思路是：A和B提前准备了一个盒子，并配了两把钥匙。每次A把秘密装进盒子里，然后用钥匙锁起来寄给B。B接到盒子后用钥匙打开，便可以知道这个秘密了。</p>
+<p>即便C通过网络截取了盒子，他没有钥匙他也打不开</p>
+<p>这种方式就叫做对称加密，所谓对称，就是说A和B的这两把钥匙使用的是同一把钥匙</p>
+<p>其中，这个秘密本身叫做明文，用来加密的钥匙叫做密钥，锁好了的信息叫做密文</p>
+<p>A和Bob都有密钥，所以他们都可以随意地把明文翻译成密文，或是把密文翻译成明文。但C没有密钥，所以无法破解密文。</p>
+<p><img src="/2019/01/31/从数学之美，到量子世界/WechatIMG137.png" alt=""></p>
+<p>可是在现代网络的实际应用中，这种加密方式会有很多很多的问题</p>
+<p>其中最大的问题是，很多情况下，A和C没有时间或者机会商量好这个钥匙，也就无法加密和解密</p>
+<p>更比如说，A和B在商量钥匙的时候，C就已经在监听了，这样的话，我们所商量的钥匙C就已经监听到了</p>
+<p>所以我们需要f更好的办法m，这就是<strong>非对称加密</strong></p>
+<h3 id="关于非对称算法"><a href="#关于非对称算法" class="headerlink" title="关于非对称算法"></a>关于非对称算法</h3><p>在一般的认知里，密匙，既可以加密也可以解密，就像平时我们锁门一样，</p>
 <script type="math/tex; mode=display">e^m</script>
       
     </div>
@@ -525,7 +546,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于质因数分解"><span class="nav-number">1.</span> <span class="nav-text">关于质因数分解</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于质因数分解"><span class="nav-number">1.</span> <span class="nav-text">关于质因数分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于密码学"><span class="nav-number">2.</span> <span class="nav-text">关于密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于对称算法"><span class="nav-number">2.1.</span> <span class="nav-text">关于对称算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于非对称算法"><span class="nav-number">2.2.</span> <span class="nav-text">关于非对称算法</span></a></li></ol></li></ol></div>
             
 
           </div>
