@@ -88,7 +88,8 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/roman-mager-59976-unsplash.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/WechatIMG137.png">
-<meta property="og:updated_time" content="2019-02-04T07:48:22.704Z">
+<meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png">
+<meta property="og:updated_time" content="2019-02-04T11:23:06.877Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从数学之美，到量子世界">
 <meta name="twitter:description" content="一直以来，我对数学，物理，天文学等自然科学带有一种敬畏之心 几年前，“数学之美”系列文章原刊载于谷歌黑板报，获得上百万次点击，读了“数学之美”，才发现大学时学的数学知识，比如马尔可夫链、矩阵计算，甚至余弦函数原来都如此亲切，并且栩栩如生，才发现自然语言和信息处理这么有趣。 于是作为一个毫无疑问的菜鸟，从最最基础的质因数分解开始，记录一直以来让我困惑的量子，以及量子到底是用来干什么的">
@@ -310,7 +311,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2019-02-04T15:48:22+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2019-02-04T19:23:06+08:00">
                 2019-02-04
               </time>
             
@@ -377,7 +378,18 @@
 <p>其中最大的问题是，很多情况下，A和C没有时间或者机会商量好这个钥匙，也就无法加密和解密</p>
 <p>更比如说，A和B在商量钥匙的时候，C就已经在监听了，这样的话，我们所商量的钥匙C就已经监听到了</p>
 <p>所以我们需要f更好的办法m，这就是<strong>非对称加密</strong></p>
-<h3 id="关于非对称算法"><a href="#关于非对称算法" class="headerlink" title="关于非对称算法"></a>关于非对称算法</h3><p>在一般的认知里，密匙，既可以加密也可以解密，就像平时我们锁门一样，</p>
+<h3 id="关于非对称算法"><a href="#关于非对称算法" class="headerlink" title="关于非对称算法"></a>关于非对称算法</h3><p>在一般的认知里，密匙，既可以加密也可以解密，就像平时我们锁门一样，一把钥匙既可以锁门也可以开门</p>
+<p>但是在非对称算法的概念里，密钥有两种：公有密钥、私有秘钥。</p>
+<p>公有密钥用于上锁（加密）。</p>
+<p>私有密钥用于解锁（解密）。</p>
+<p>因为A只需要上锁，所以她只需要公有密匙就够了。私有密匙只有B拥有。</p>
+<p>A会先通知B：我要告诉你一件事。然后B接着就会生成一把锁，并制作两种钥匙：公有密钥和私有秘钥。B会把公有密钥发给A，然后A会用公有密钥加密信息。A把上锁的密文发回来后，B再用自己的私有密钥解密，并得到明文。</p>
+<p>整个过程中，只有B拥有私有密钥。</p>
+<p>B的私有秘钥不会交给任何人的。</p>
+<p>纵使C获得了明文和公开密钥，Eve也无法解密。因为只有私有密匙才可以解密。</p>
+<p>非对称加密的基本原理就是这样</p>
+<p>为了打造这两把钥匙，一把用于上锁，一把用于开锁，我们还需要利用一些计算机和数论方面的知识。</p>
+<h2 id="关于数论以及RSA"><a href="#关于数论以及RSA" class="headerlink" title="关于数论以及RSA"></a>关于数论以及RSA</h2><p><img src="/2019/01/31/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png" alt=""></p>
 <script type="math/tex; mode=display">e^m</script>
       
     </div>
@@ -411,6 +423,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/04/写在2019年大年三十/" rel="prev" title="写在2019年大年三十">
+                写在2019年大年三十 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -491,7 +507,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -546,7 +562,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于质因数分解"><span class="nav-number">1.</span> <span class="nav-text">关于质因数分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于密码学"><span class="nav-number">2.</span> <span class="nav-text">关于密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于对称算法"><span class="nav-number">2.1.</span> <span class="nav-text">关于对称算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于非对称算法"><span class="nav-number">2.2.</span> <span class="nav-text">关于非对称算法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于质因数分解"><span class="nav-number">1.</span> <span class="nav-text">关于质因数分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于密码学"><span class="nav-number">2.</span> <span class="nav-text">关于密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于对称算法"><span class="nav-number">2.1.</span> <span class="nav-text">关于对称算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于非对称算法"><span class="nav-number">2.2.</span> <span class="nav-text">关于非对称算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于数论以及RSA"><span class="nav-number">3.</span> <span class="nav-text">关于数论以及RSA</span></a></li></ol></div>
             
 
           </div>
