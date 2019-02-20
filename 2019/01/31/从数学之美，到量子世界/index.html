@@ -89,7 +89,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/roman-mager-59976-unsplash.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/WechatIMG137.png">
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png">
-<meta property="og:updated_time" content="2019-02-20T04:44:09.591Z">
+<meta property="og:updated_time" content="2019-02-20T04:51:35.506Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从数学之美，到量子世界">
 <meta name="twitter:description" content="一直以来，我对数学，物理，天文学等自然科学带有一种敬畏之心 几年前，“数学之美”系列文章原刊载于谷歌黑板报，获得上百万次点击，读了“数学之美”，才发现大学时学的数学知识，比如马尔可夫链、矩阵计算，甚至余弦函数原来都如此亲切，并且栩栩如生，才发现自然语言和信息处理这么有趣。 于是作为一个毫无疑问的菜鸟，从最最基础的质因数分解开始，记录一直以来让我困惑的量子，以及量子到底是用来干什么的">
@@ -311,7 +311,7 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2019-02-20T12:44:09+08:00">
+              <time title="Post modified" itemprop="dateModified" datetime="2019-02-20T12:51:35+08:00">
                 2019-02-20
               </time>
             
@@ -390,17 +390,15 @@
 <p>非对称加密的基本原理就是这样</p>
 <p>为了打造这两把钥匙，一把用于上锁，一把用于开锁，我们还需要利用一些计算机和数论方面的知识。</p>
 <h2 id="关于数论以及RSA"><a href="#关于数论以及RSA" class="headerlink" title="关于数论以及RSA"></a>关于数论以及RSA</h2><p><img src="/2019/01/31/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png" alt="" title="欧拉"></p>
-<h3 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h3><script type="math/tex; mode=display">φ(n)$$ 表示小于n的正整数中与n互质的数的数目。（互质表示公因数为1）
-
-比如想要知道$$φ(10)$$的话，我们就可以看[1, 10)中和10互质的整数，也就是1、3、7、9这四个数。（2、4、6、8和10有公因数2，而5和10有公因数10）。所以$$φ(10)=4$$。
-
-比如想要知道φ(21)的话，我们就可以看[1, 21)中和21互质的整数，也就是1、2、4、5、8、10、11、13、16、17、19、20这12个数。（3、6、9、12、15、18和21有公因数3，而7、14和21有公因数7）。所以φ(21)=12。
-
-我们惊喜地发现!!!
-
-如果n能写作两个不同质数 p_1 与 p_2 的乘积，那么
-
-$$φ(n)=(p_1-1)(p_2-1)</script><h3 id="欧拉公式"><a href="#欧拉公式" class="headerlink" title="欧拉公式"></a>欧拉公式</h3><p>若<script type="math/tex">a</script>与<script type="math/tex">n</script>互质，则<script type="math/tex">a^φ(n) = 1(mod n)</script></p>
+<h3 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h3><p>φ(n)表示小于n的正整数中与n互质的数的数目。（互质表示公因数为1）</p>
+<p>比如想要知道<script type="math/tex">φ(10)</script>的话，我们就可以看[1, 10)中和10互质的整数，也就是1、3、7、9这四个数。</p>
+<p>（2、4、6、8和10有公因数2，而5和10有公因数10）。</p>
+<p>所以<script type="math/tex">φ(10)=4</script>。</p>
+<p>比如想要知道φ(21)的话，我们就可以看[1, 21)中和21互质的整数，也就是1、2、4、5、8、10、11、13、16、17、19、20这12个数。</p>
+<p>（3、6、9、12、15、18和21有公因数3，而7、14和21有公因数7）。所以φ(21)=12。</p>
+<p>我们惊喜地发现!!!</p>
+<p>如果n能写作两个不同质数 p_1 与 p_2 的乘积，那么</p>
+<script type="math/tex; mode=display">φ(n)=(p_1-1)(p_2-1)</script><h3 id="欧拉公式"><a href="#欧拉公式" class="headerlink" title="欧拉公式"></a>欧拉公式</h3><p>若<script type="math/tex">a</script>与<script type="math/tex">n</script>互质，则<script type="math/tex">a^φ(n) = 1(mod n)</script></p>
 <p>用拉格朗日证明上式</p>
 <h3 id="乘法逆元"><a href="#乘法逆元" class="headerlink" title="乘法逆元"></a>乘法逆元</h3><p>如果ab ≡ 1（mod m），则称a和b为关于m互为乘法逆元。</p>
 <p>已知a求b的方法：因为ab ≡ 1（mod m），所以不妨设ab+mk=1，其中a和m为已知数。</p>
