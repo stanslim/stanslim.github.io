@@ -89,7 +89,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/roman-mager-59976-unsplash.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/WechatIMG137.png">
 <meta property="og:image" content="http://yoursite.com/2019/01/31/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png">
-<meta property="og:updated_time" content="2019-02-04T11:23:06.877Z">
+<meta property="og:updated_time" content="2019-02-20T04:44:09.591Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从数学之美，到量子世界">
 <meta name="twitter:description" content="一直以来，我对数学，物理，天文学等自然科学带有一种敬畏之心 几年前，“数学之美”系列文章原刊载于谷歌黑板报，获得上百万次点击，读了“数学之美”，才发现大学时学的数学知识，比如马尔可夫链、矩阵计算，甚至余弦函数原来都如此亲切，并且栩栩如生，才发现自然语言和信息处理这么有趣。 于是作为一个毫无疑问的菜鸟，从最最基础的质因数分解开始，记录一直以来让我困惑的量子，以及量子到底是用来干什么的">
@@ -311,8 +311,8 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2019-02-04T19:23:06+08:00">
-                2019-02-04
+              <time title="Post modified" itemprop="dateModified" datetime="2019-02-20T12:44:09+08:00">
+                2019-02-20
               </time>
             
           </span>
@@ -372,12 +372,12 @@
 <p>即便C通过网络截取了盒子，他没有钥匙他也打不开</p>
 <p>这种方式就叫做对称加密，所谓对称，就是说A和B的这两把钥匙使用的是同一把钥匙</p>
 <p>其中，这个秘密本身叫做明文，用来加密的钥匙叫做密钥，锁好了的信息叫做密文</p>
-<p>A和Bob都有密钥，所以他们都可以随意地把明文翻译成密文，或是把密文翻译成明文。但C没有密钥，所以无法破解密文。</p>
+<p>A和B都有密钥，所以他们都可以随意地把明文翻译成密文，或是把密文翻译成明文。但C没有密钥，所以无法破解密文。</p>
 <p><img src="/2019/01/31/从数学之美，到量子世界/WechatIMG137.png" alt=""></p>
 <p>可是在现代网络的实际应用中，这种加密方式会有很多很多的问题</p>
 <p>其中最大的问题是，很多情况下，A和C没有时间或者机会商量好这个钥匙，也就无法加密和解密</p>
 <p>更比如说，A和B在商量钥匙的时候，C就已经在监听了，这样的话，我们所商量的钥匙C就已经监听到了</p>
-<p>所以我们需要f更好的办法m，这就是<strong>非对称加密</strong></p>
+<p>所以我们需要更好的办法，这就是<strong>非对称加密</strong></p>
 <h3 id="关于非对称算法"><a href="#关于非对称算法" class="headerlink" title="关于非对称算法"></a>关于非对称算法</h3><p>在一般的认知里，密匙，既可以加密也可以解密，就像平时我们锁门一样，一把钥匙既可以锁门也可以开门</p>
 <p>但是在非对称算法的概念里，密钥有两种：公有密钥、私有秘钥。</p>
 <p>公有密钥用于上锁（加密）。</p>
@@ -386,10 +386,26 @@
 <p>A会先通知B：我要告诉你一件事。然后B接着就会生成一把锁，并制作两种钥匙：公有密钥和私有秘钥。B会把公有密钥发给A，然后A会用公有密钥加密信息。A把上锁的密文发回来后，B再用自己的私有密钥解密，并得到明文。</p>
 <p>整个过程中，只有B拥有私有密钥。</p>
 <p>B的私有秘钥不会交给任何人的。</p>
-<p>纵使C获得了明文和公开密钥，Eve也无法解密。因为只有私有密匙才可以解密。</p>
+<p>纵使C获得了明文和公开密钥，C也无法解密。因为只有私有密匙才可以解密。</p>
 <p>非对称加密的基本原理就是这样</p>
 <p>为了打造这两把钥匙，一把用于上锁，一把用于开锁，我们还需要利用一些计算机和数论方面的知识。</p>
-<h2 id="关于数论以及RSA"><a href="#关于数论以及RSA" class="headerlink" title="关于数论以及RSA"></a>关于数论以及RSA</h2><p><img src="/2019/01/31/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png" alt=""></p>
+<h2 id="关于数论以及RSA"><a href="#关于数论以及RSA" class="headerlink" title="关于数论以及RSA"></a>关于数论以及RSA</h2><p><img src="/2019/01/31/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png" alt="" title="欧拉"></p>
+<h3 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h3><script type="math/tex; mode=display">φ(n)$$ 表示小于n的正整数中与n互质的数的数目。（互质表示公因数为1）
+
+比如想要知道$$φ(10)$$的话，我们就可以看[1, 10)中和10互质的整数，也就是1、3、7、9这四个数。（2、4、6、8和10有公因数2，而5和10有公因数10）。所以$$φ(10)=4$$。
+
+比如想要知道φ(21)的话，我们就可以看[1, 21)中和21互质的整数，也就是1、2、4、5、8、10、11、13、16、17、19、20这12个数。（3、6、9、12、15、18和21有公因数3，而7、14和21有公因数7）。所以φ(21)=12。
+
+我们惊喜地发现!!!
+
+如果n能写作两个不同质数 p_1 与 p_2 的乘积，那么
+
+$$φ(n)=(p_1-1)(p_2-1)</script><h3 id="欧拉公式"><a href="#欧拉公式" class="headerlink" title="欧拉公式"></a>欧拉公式</h3><p>若<script type="math/tex">a</script>与<script type="math/tex">n</script>互质，则<script type="math/tex">a^φ(n) = 1(mod n)</script></p>
+<p>用拉格朗日证明上式</p>
+<h3 id="乘法逆元"><a href="#乘法逆元" class="headerlink" title="乘法逆元"></a>乘法逆元</h3><p>如果ab ≡ 1（mod m），则称a和b为关于m互为乘法逆元。</p>
+<p>已知a求b的方法：因为ab ≡ 1（mod m），所以不妨设ab+mk=1，其中a和m为已知数。</p>
+<p>可以利用扩展欧几里得算法，可以在多项式时间内，计算出来一个乘法逆元b。</p>
+<p>(事实上，b的解不唯一，这里只是求出了一个b。)</p>
 <script type="math/tex; mode=display">e^m</script>
       
     </div>
@@ -562,7 +578,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于质因数分解"><span class="nav-number">1.</span> <span class="nav-text">关于质因数分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于密码学"><span class="nav-number">2.</span> <span class="nav-text">关于密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于对称算法"><span class="nav-number">2.1.</span> <span class="nav-text">关于对称算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于非对称算法"><span class="nav-number">2.2.</span> <span class="nav-text">关于非对称算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于数论以及RSA"><span class="nav-number">3.</span> <span class="nav-text">关于数论以及RSA</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于质因数分解"><span class="nav-number">1.</span> <span class="nav-text">关于质因数分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于密码学"><span class="nav-number">2.</span> <span class="nav-text">关于密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于对称算法"><span class="nav-number">2.1.</span> <span class="nav-text">关于对称算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于非对称算法"><span class="nav-number">2.2.</span> <span class="nav-text">关于非对称算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于数论以及RSA"><span class="nav-number">3.</span> <span class="nav-text">关于数论以及RSA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#欧拉函数"><span class="nav-number">3.1.</span> <span class="nav-text">欧拉函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#欧拉公式"><span class="nav-number">3.2.</span> <span class="nav-text">欧拉公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#乘法逆元"><span class="nav-number">3.3.</span> <span class="nav-text">乘法逆元</span></a></li></ol></li></ol></div>
             
 
           </div>
