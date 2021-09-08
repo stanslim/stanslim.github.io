@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="kubernetes命令," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="目前的情况来看，k8s已经可以自动调度本地开发的mlu-device-plugin并且识别到mlu板卡 在这个调试过程中，最先开始没有用k8s直接调度，是使用本地镜像通过docker run来试运行，在宿主机运行的时候，需要加上两个参数，一个是—device，用来让docker识别到设备，另一个是-v 需要在/var/lib下创建kubelet文件，这个文件是在插件中，与k8s相互通信的socke">
+<meta name="keywords" content="kubernetes命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s识别mlu100计算卡小结">
+<meta property="og:url" content="http://yoursite.com/2019/01/09/k8s识别mlu100计算卡小结/index.html">
+<meta property="og:site_name" content="Zy Wang&#39;s Blog">
+<meta property="og:description" content="目前的情况来看，k8s已经可以自动调度本地开发的mlu-device-plugin并且识别到mlu板卡 在这个调试过程中，最先开始没有用k8s直接调度，是使用本地镜像通过docker run来试运行，在宿主机运行的时候，需要加上两个参数，一个是—device，用来让docker识别到设备，另一个是-v 需要在/var/lib下创建kubelet文件，这个文件是在插件中，与k8s相互通信的socke">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-29T11:38:33.233Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s识别mlu100计算卡小结">
+<meta name="twitter:description" content="目前的情况来看，k8s已经可以自动调度本地开发的mlu-device-plugin并且识别到mlu板卡 在这个调试过程中，最先开始没有用k8s直接调度，是使用本地镜像通过docker run来试运行，在宿主机运行的时候，需要加上两个参数，一个是—device，用来让docker识别到设备，另一个是-v 需要在/var/lib下创建kubelet文件，这个文件是在插件中，与k8s相互通信的socke">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/09/k8s识别mlu100计算卡小结/"/>
+
+
+
+
+
+  <title>k8s识别mlu100计算卡小结 | Zy Wang's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zy Wang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/09/k8s识别mlu100计算卡小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王振宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zy Wang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">k8s识别mlu100计算卡小结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-09T10:20:49+08:00">
+                2019-01-09
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2019-01-29T19:38:33+08:00">
+                2019-01-29
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>目前的情况来看，k8s已经可以自动调度本地开发的mlu-device-plugin并且识别到mlu板卡</p>
+<p>在这个调试过程中，最先开始没有用k8s直接调度，是使用本地镜像通过docker run来试运行，在宿主机运行的时候，需要加上两个参数，一个是—device，用来让docker识别到设备，另一个是-v 需要在/var/lib下创建kubelet文件，这个文件是在插件中，与k8s相互通信的socket文件存储位置，如果没有的话会报错，fswatcher创建失败，另外，因为在代码中用到了两个寒武纪的库文件，一个是cndev获取设备静态信息库，另一个是cnrt运行库文件<br>在代码中使用dlopen函数动态加载库：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">handle</span> = dlopen(<span class="string">"libcndev_1.1.0.so"</span>, RTLD_LAZY | RTLD_GLOBAL);</span><br><span class="line"><span class="attribute">handle</span> = dlopen(<span class="string">"libcnrt_3.7.0.so"</span>, RTLD_LAZY | RTLD_GLOBAL);</span><br></pre></td></tr></table></figure></p>
+<p>所以在运行docker之后把这两个文件拷贝到容器内的/usr/lib/中去</p>
+<a id="more"></a>
+<p>具体命令如下<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>.sudo docker run --device /dev/cambricon_c10Dev0 --device /dev/cnmon_dev -v /var/<span class="class"><span class="keyword">lib</span>/<span class="title">kubelet</span> -<span class="title">it</span> &lt;<span class="title">imagesID</span>&gt; /<span class="title">bin</span>/<span class="title">bash</span></span></span><br><span class="line"><span class="number">2</span>.sudo docker cp /usr/<span class="class"><span class="keyword">lib</span>/<span class="title">libcnrt_3</span>.7.0.<span class="title">so</span> &lt;<span class="title">containerId</span>&gt;:/<span class="title">usr</span>/<span class="title">lib</span>/</span></span><br><span class="line"><span class="number">3</span>.sudo docker cp/usr/<span class="class"><span class="keyword">lib</span>/<span class="title">libcndev_1</span>.1.0/<span class="title">so</span> &lt;<span class="title">containerId</span>&gt;:/<span class="title">usr</span>/<span class="title">lib</span>/</span></span><br></pre></td></tr></table></figure></p>
+<p>这样做是十分麻烦的，并且留下另一个问题，就是k8s直接调度的时候如何把我们需要的库文件，以及启动参数加入进去</p>
+<p>其中，库文件的拷贝，/var/lib/kubelet的挂载在dockerfile实现，—divice参数识别设备在k8s创建pods的yaml文件中实现<br>dockerfile：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">FROM cambricon/<span class="symbol">test:</span>v4.<span class="number">1</span> <span class="keyword">as</span> build</span><br><span class="line"></span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends \</span><br><span class="line">        g++ \</span><br><span class="line">        ca-certificates \</span><br><span class="line">        wget &amp;&amp; \</span><br><span class="line">    rm -rf /var/<span class="class"><span class="keyword">lib</span>/<span class="title">apt</span>/<span class="title">lists</span>/*</span></span><br><span class="line"></span><br><span class="line">ENV GOLANG_VERSION <span class="number">1.10</span>.<span class="number">3</span></span><br><span class="line">ENV GOPATH /go</span><br><span class="line">ENV PATH $GOPATH/<span class="symbol">bin:</span>/usr/local/go/<span class="symbol">bin:</span>$PATH</span><br><span class="line"></span><br><span class="line">RUN wget -nv -O - <span class="symbol">https:</span>/<span class="regexp">/studygolang.com/dl</span><span class="regexp">/golang/go</span>1.<span class="number">10.3</span>.linux-amd64.tar.gz \</span><br><span class="line">    | tar -C /usr/local -xz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">WORKDIR /go/src/k8s-device-plugin</span><br><span class="line">COPY . .</span><br><span class="line"></span><br><span class="line">RUN export CGO_LDFLAGS_ALLOW=<span class="string">'-Wl,--unresolved-symbols=ignore-in-object-files'</span> &amp;&amp; \</span><br><span class="line">   go install -ldflags=<span class="string">"-s -w"</span> -v k8s-device-plugin</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">FROM <span class="symbol">debian:</span>stretch-slim</span><br><span class="line">COPY --chown=<span class="number">777</span> libcndev_1.<span class="number">1.0</span>.so /usr/<span class="class"><span class="keyword">lib</span>/</span></span><br><span class="line">COPY --chown=<span class="number">777</span> libcnrt_3.<span class="number">7.0</span>.so /usr/<span class="class"><span class="keyword">lib</span>/</span></span><br><span class="line"></span><br><span class="line">VOLUME /var/<span class="class"><span class="keyword">lib</span>/<span class="title">kubelet</span> /<span class="title">var</span>/<span class="title">lib</span>/<span class="title">kubelet</span></span></span><br><span class="line"><span class="comment">#VOLUME /dev/cambricon_c10Dev0 /dev/cambricon_c10Dev0</span></span><br><span class="line"><span class="comment">#VOLUME /dev/cnmon_dev /dev/cnmon_dev</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#ENV NVIDIA_VISIBLE_DEVICES=all</span></span><br><span class="line"><span class="comment">#ENV NVIDIA_DRIVER_CAPABILITIES=utility</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">COPY --from=build /go/bin/k8s-device-plugin /usr/bin/k8s-device-plugin</span><br><span class="line"><span class="comment">#</span></span><br><span class="line">CMD [<span class="string">"k8s-device-plugin"</span>]</span><br></pre></td></tr></table></figure></p>
+<p>可以看到在第25，26行中把两个库文件拷贝到了/var/lib中<br>在28行挂载了volume /var/lib/kubelet</p>
+<p>项目github地址为git@172.16.70.209:stanslim/k8s-device-plugin-mlu100.git</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">git clone git@<span class="number">172.16</span><span class="number">.70</span><span class="number">.209</span>:stanslim/k8s-device-plugin-mlu100.git</span><br><span class="line"></span><br><span class="line">docker build -t <span class="params">&lt;自己起的镜像名字，在yml中使用&gt;</span> .</span><br><span class="line"></span><br><span class="line">docker images <span class="comment">//查看所有镜像</span></span><br><span class="line"></span><br><span class="line">docker ps <span class="comment">//查看所有运行中的容器</span></span><br><span class="line"></span><br><span class="line">docker ps -a <span class="comment">//查看所有容器</span></span><br><span class="line"></span><br><span class="line">docker  rm <span class="params">&lt;id&gt;</span><span class="comment">//删除容器</span></span><br><span class="line"></span><br><span class="line">docker stop <span class="params">&lt;id&gt;</span><span class="comment">//停止容器</span></span><br><span class="line"></span><br><span class="line">docker rmi <span class="params">&lt;id&gt;</span><span class="comment">//删除镜像</span></span><br></pre></td></tr></table></figure>
+<p>再来看yaml文件<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DaemonSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">my-mlu-device-plugin</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">kube-system</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line">      <span class="comment"># Mark this pod as a critical add-on; when enabled, the critical add-on scheduler</span></span><br><span class="line">      <span class="comment"># reserves resources for critical add-on pods so that they can be rescheduled after</span></span><br><span class="line">      <span class="comment"># a failure.  This annotation works in tandem with the toleration below.</span></span><br><span class="line"><span class="attr">      annotations:</span></span><br><span class="line">        <span class="string">scheduler.alpha.kubernetes.io/critical-pod:</span> <span class="string">""</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">mlu-device-plugin-ds</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      tolerations:</span></span><br><span class="line">      <span class="comment"># Allow this pod to be rescheduled while the node is in "critical add-ons only" mode.</span></span><br><span class="line">      <span class="comment"># This, along with the annotation above marks this pod as a critical add-on.</span></span><br><span class="line"><span class="attr">      - key:</span> <span class="string">CriticalAddonsOnly</span></span><br><span class="line"><span class="attr">        operator:</span> <span class="string">Exists</span></span><br><span class="line"><span class="attr">      - key:</span> <span class="string">cambricon.com/mlu</span></span><br><span class="line"><span class="attr">        operator:</span> <span class="string">Exists</span></span><br><span class="line"><span class="attr">        effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - image:</span> <span class="string">&lt;之前起的镜像名字&gt;</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">mlu-device-plugin-ctr</span></span><br><span class="line"><span class="attr">        securityContext:</span></span><br><span class="line"><span class="attr">          privileged:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">          allowPrivilegeEscalation:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">          capabilities:</span></span><br><span class="line"><span class="attr">            drop:</span> <span class="string">["ALL"]</span></span><br><span class="line"><span class="attr">        volumeMounts:</span></span><br><span class="line"><span class="attr">          - name:</span> <span class="string">device-plugin</span></span><br><span class="line"><span class="attr">            mountPath:</span> <span class="string">/var/lib/kubelet/device-plugins</span></span><br><span class="line"><span class="attr">      volumes:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">device-plugin</span></span><br><span class="line"><span class="attr">          hostPath:</span></span><br><span class="line"><span class="attr">            path:</span> <span class="string">/var/lib/kubelet/device-plugins</span></span><br></pre></td></tr></table></figure></p>
+<p>在29行中设置了privileged关键字，使得dokcer可以识别设备</p>
+<p>按照这个yml文件创建的pod，实现了k8s对mlu100板卡的识别<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f <span class="tag">&lt;<span class="name">yml文件</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>创建之后可以查看节点来监测是否识别到mlu计算卡<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe <span class="keyword">node</span> <span class="title">&lt;节点名称&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>查看pod运行状态<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl <span class="keyword">get</span> pods <span class="comment">--all-namespaces</span></span><br></pre></td></tr></table></figure></p>
+<p>如果遇到问题，可以通过查看pod的日志排查问题<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs <span class="tag">&lt;<span class="name">pod名称</span>&gt;</span> -n <span class="tag">&lt;<span class="name">命名空间</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>-EOF-</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes命令/" rel="tag"> <i class="fa fa-tag"></i> kubernetes命令</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/27/Ubuntu16-04部署k8s踩过的坑/" rel="next" title="Ubuntu16.04部署k8s踩过的坑">
+                <i class="fa fa-chevron-left"></i> Ubuntu16.04部署k8s踩过的坑
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/04/写在2019年大年三十/" rel="prev" title="写在2019年大年三十">
+                写在2019年大年三十 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/481524115144_.pic.jpg"
+                alt="王振宇" />
+            
+              <p class="site-author-name" itemprop="name">王振宇</p>
+              <p class="site-description motion-element" itemprop="description">每一个不曾起舞的日子都是对生命的辜负。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王振宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

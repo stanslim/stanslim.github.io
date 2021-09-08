@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="技术," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="实验室二期要基于寒武纪MLU100和NVIDIA GPU搭建一个完整的云计算平台 因为接触容器及微服务等概念时间较短，以下是这几天查完资料后，自己关于Kubernetes和微服务的一些理解以及自己的一些思考过程">
+<meta name="keywords" content="技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于k8s以及微服务自己的理解">
+<meta property="og:url" content="http://yoursite.com/2018/12/01/对Docker和kubernetes的一些理解/index.html">
+<meta property="og:site_name" content="Zy Wang&#39;s Blog">
+<meta property="og:description" content="实验室二期要基于寒武纪MLU100和NVIDIA GPU搭建一个完整的云计算平台 因为接触容器及微服务等概念时间较短，以下是这几天查完资料后，自己关于Kubernetes和微服务的一些理解以及自己的一些思考过程">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://static.zybuluo.com/stanslim/qkj2fqslcgts68ledipew1tx/9f973d5d0faab7c6361b2b67800d0e59.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/stanslim/d4llbtfyqjj2qw5xg6nzlruu/8c016391b4b17923f38547c498e434cf.png">
+<meta property="og:updated_time" content="2018-12-12T01:06:39.064Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于k8s以及微服务自己的理解">
+<meta name="twitter:description" content="实验室二期要基于寒武纪MLU100和NVIDIA GPU搭建一个完整的云计算平台 因为接触容器及微服务等概念时间较短，以下是这几天查完资料后，自己关于Kubernetes和微服务的一些理解以及自己的一些思考过程">
+<meta name="twitter:image" content="http://static.zybuluo.com/stanslim/qkj2fqslcgts68ledipew1tx/9f973d5d0faab7c6361b2b67800d0e59.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/01/对Docker和kubernetes的一些理解/"/>
+
+
+
+
+
+  <title>关于k8s以及微服务自己的理解 | Zy Wang's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zy Wang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/对Docker和kubernetes的一些理解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王振宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zy Wang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于k8s以及微服务自己的理解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T21:25:35+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-12-12T09:06:39+08:00">
+                2018-12-12
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>实验室二期要基于寒武纪MLU100和NVIDIA GPU搭建一个完整的云计算平台</p>
+<p>因为接触容器及微服务等概念时间较短，以下是这几天查完资料后，自己关于Kubernetes和微服务的一些理解以及自己的一些思考过程</p>
+<a id="more"></a>
+<h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a><strong>Kubernetes</strong></h2><pre><code>先说容器
+</code></pre><p><strong>Paas（Platform-as-a-Service）</strong></p>
+<p>容器技术，产生与Paas技术的普及</p>
+<p>具体什么是paas技术，我的理解是平台及服务（Platform-as-a-Service），也就是说我们的给用户的服务就是我们的平台，用户可以在我们的平台上部署他们自己的应用，而我们的平台要解决的就是，如何提供给这些用户他们所需要的运行环境。</p>
+<p>在原先没有docker的时候，paas使用的是应用打包的方法，用户把自己的应用（每一种语言，每一个框架）打包上传到集群里面去，部署的时候很简单，但是打包的过程的坑十分的多（具体有什么坑因为没有实际操作过还不清楚，只是看到资料里面说坑很多），甚至每一个版本更新之后都需要重新打包</p>
+<p>并且，使用虚拟化的paas本身虚拟机就要占内存，可想而知如果在部署多个虚拟机同时跑应用的时候，性能消耗之大。<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># paas应用一键部署命令</span></span><br><span class="line"></span><br><span class="line">cf <span class="keyword">push</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="Docker-容器"><a href="#Docker-容器" class="headerlink" title="Docker(容器)"></a><strong>Docker(容器)</strong></h3><p>而Docker 镜像解决的，恰恰就是打包这个根本性的问题。所谓Docker的镜相，就是一个完整操作系统的所有文件和目录构成的压缩包，这个压缩包包含了完整的操作系统文件和目录，也就是包含了这个应用所需要的所有依赖</p>
+<p>这里有一个问题是，既然打包了整个操作系统，如果一台机器上跑n个docker镜像，那意味着有n个操作系统运行在这台机器上，那每个docker所能获取到的资源是不是就很有限了，比如内存、cpu、文件描述符等等</p>
+<p>其实这里是只打包了文件系统，包含着你的应用依赖，不包括操作系统内核。</p>
+<p><img src="http://static.zybuluo.com/stanslim/qkj2fqslcgts68ledipew1tx/9f973d5d0faab7c6361b2b67800d0e59.jpg" alt="9f973d5d0faab7c6361b2b67800d0e59.jpg-63.4kB"></p>
+<p>这幅图中画出了虚拟机的工作原理。其中，名为Hypervisor代表着使用硬件虚拟的方式模拟出一个操作系统所需要的各种硬件</p>
+<p>而相比容器化之后的用户应用，依然是宿主机上面自己的一个进程，只不过使用NameSpace手段将他们隔离开来了</p>
+<p>这时候问题又来了</p>
+<p>既然容器就是进程宿主机使用NameSpace把进程隔离了，让他们只认识自己不去管其他的进程，但毕竟他们只是一个进程啊</p>
+<p>假如说一个进程编号为PID = 666的进程资源消耗的过大，占用了宿主机100%的cpu，那其他进程（其他容器）岂不是不能工作了？</p>
+<p>这时候就需要使用Linux Cgroups来做进程的资源限制了</p>
+<h4 id="Cgroups（Linux-control-Group）"><a href="#Cgroups（Linux-control-Group）" class="headerlink" title="Cgroups（Linux control Group）"></a><strong>Cgroups（Linux control Group）</strong></h4><p>是用来限制容器在宿主机使用资源的，包括网络带宽，cpu，内存等等</p>
+<p>Linux Cgroups 的设计还是比较易用的，简单理解就是一个子系统目录+资源限制的文件</p>
+<p>拿限制cpu举例：</p>
+<p>比如在执行docker run命令的时候，我们可以加上参数</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#让这个Docker容器只能使用到20%的带宽</span></span><br><span class="line">$ docker <span class="builtin-name">run</span> -it <span class="attribute">--cpu-period</span>=100000 <span class="attribute">--cpu-quota</span>=20000 ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+<pre><code>到这里大致对容器的基础有了一些认识，接下来翻阅了一些kubernetes的文档，再讲一下对于k8s的我的理解
+</code></pre><h3 id="Kubernetes-1"><a href="#Kubernetes-1" class="headerlink" title="Kubernetes"></a><strong>Kubernetes</strong></h3><p>对于大多数用户来说，希望的是Kubernetes项目带来的体验是确定的：现在我有了应用的容器镜像，请帮我在一个给定的集群上把这个应用运行起来。</p>
+<p>更进一步地说，我还希望Kubernetes能给我提供路由网关、水平扩展、监控、备份、灾难恢复等一系列运维能力。</p>
+<p>而这些都是paas就可以完成的功能，所以除此之外，kubernetes由 Master 和 Node 两种节点组成，而这两种角色分别对应着控制节点和计算节点。</p>
+<p>其中，控制节点，即Master节点，由三个紧密协作的独立组件组合而成，它们分别是负责 API服务的kube-apiserver、负责调度的kube-scheduler，以及负责容器编排的kube-controller-manager。整个集群的持久化数据，则由 kube-apiserver 处理后保存在 Ectd 中。</p>
+<p>也就是说，只要你愿意，那些原先拥挤在同一个虚拟机里的各个应用、组件都可以被分别做成镜像，然后运行在一个个专属的容器中。它们之间互不干涉，拥有各自的资源配额</p>
+<h4 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a><strong>Pod</strong></h4><p>Pod是kubernetes里面的原子调度单位</p>
+<p>为什么需要Pod？</p>
+<p>假设我们的集群上有A（3个GB）和B（2.5GB）两个节点，一个程序由a，b，c组成（每个1GB），需要把他们安排到一个节点上去，如果使用docker swarm，调度器有可能安排在B节点，也就是2.5GB的节点上去，当c开始被调度的时候，swarm就不知道怎么办了，因为B里面只剩下0.5GB可以用了</p>
+<p>那如果我们把a，b，c组成为一个Pod，调度器以一个Pod为单位进行调度的时候，自然就会选择A（GB）的节点，不会去选择B了</p>
+<p>搜索了一下Pod的底层实现原理，Pod就是一组紧密协作关系的容器，他们相互共享了Volume<br><img src="http://static.zybuluo.com/stanslim/d4llbtfyqjj2qw5xg6nzlruu/8c016391b4b17923f38547c498e434cf.png" alt="8c016391b4b17923f38547c498e434cf.png-42.9kB"></p>
+<p>就像上图画出来的那样，在创建一个pod的时各个候，每次都是先创建一个叫做infra的容器（一个中间容器），而其他的容器，也就是我们自己真正的容器通过下面这段命令的方式挂载上去的</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="builtin-name">run</span> <span class="attribute">--net</span>=B <span class="attribute">--volumes-from</span>=B <span class="attribute">--name</span>=A image-A <span class="built_in">..</span>.</span><br></pre></td></tr></table></figure>
+<p>为什么要多这一个中间的容器呢，因为如果没有这个最先创建的容器作为中间容器让其他容器挂载，那么在创建Pod的时候，就需要用我们自己的容器对象来作为挂载者了，这样的话在一个Pod里面，每个容器就不是对等关系了，就成了有先有后的拓扑关系</p>
+<p>而这个infra容器他的消耗资源是很小的，这都是人家k8s设计好的。</p>
+<h2 id="总结心得"><a href="#总结心得" class="headerlink" title="总结心得"></a>总结心得</h2><p>1.在之后我们自己部署和设计Pod的时候，到底哪些容器设计成一个Pod，目前的理解是，如果把kubernetes看成一个大的操作系统的话，每一个Pod应该就是在传统环境部署里面的“虚拟机”，而Pod里面的每一个容器应该就是运行在“这个机器”里面的用户进程，所以说，但凡是网络，调度，存储等等相关的属性都是属于Pod层面上的。</p>
+<p>-EOF-</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/技术/" rel="tag"> <i class="fa fa-tag"></i> 技术</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/24/24/" rel="next" title="24">
+                <i class="fa fa-chevron-left"></i> 24
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/01/kuberbetes支持GPU应用的理解以及Device Plugin机制的原理/" rel="prev" title="Kubernetes GPU管理与Device Plugin机制">
+                Kubernetes GPU管理与Device Plugin机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/481524115144_.pic.jpg"
+                alt="王振宇" />
+            
+              <p class="site-author-name" itemprop="name">王振宇</p>
+              <p class="site-description motion-element" itemprop="description">每一个不曾起舞的日子都是对生命的辜负。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-容器"><span class="nav-number">1.1.</span> <span class="nav-text">Docker(容器)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cgroups（Linux-control-Group）"><span class="nav-number">1.1.1.</span> <span class="nav-text">Cgroups（Linux control Group）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kubernetes-1"><span class="nav-number">1.2.</span> <span class="nav-text">Kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Pod"><span class="nav-number">1.2.1.</span> <span class="nav-text">Pod</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结心得"><span class="nav-number">2.</span> <span class="nav-text">总结心得</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王振宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

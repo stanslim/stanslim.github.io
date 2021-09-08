@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="技术," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="人工智能和机器学习已经并不是什么新鲜的概念了，而这次热潮的背后，云计算的普及和应用，GPU算力的巨大提升，才是真正把机器学习和深度学习从象牙塔带到工业界的重要推手 目前摸Kubernetes两周多了，这篇博客记录一下对kubernetes支持GPU应用的理解，以及Device Plugin机制的原理">
+<meta name="keywords" content="技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes GPU管理与Device Plugin机制">
+<meta property="og:url" content="http://yoursite.com/2018/12/01/kuberbetes支持GPU应用的理解以及Device Plugin机制的原理/index.html">
+<meta property="og:site_name" content="Zy Wang&#39;s Blog">
+<meta property="og:description" content="人工智能和机器学习已经并不是什么新鲜的概念了，而这次热潮的背后，云计算的普及和应用，GPU算力的巨大提升，才是真正把机器学习和深度学习从象牙塔带到工业界的重要推手 目前摸Kubernetes两周多了，这篇博客记录一下对kubernetes支持GPU应用的理解，以及Device Plugin机制的原理">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://static.zybuluo.com/stanslim/dupx4bbawd2jo3bv4hz4pw9k/WeChate08107c77dbd45c15fb5ff76f33346d4.png">
+<meta property="og:image" content="http://static.zybuluo.com/stanslim/ohumw19r4lnfy4sknhoqbnp4/5db13d33cb647f33c62837e9cccdfb85.png">
+<meta property="og:image" content="http://static.zybuluo.com/stanslim/5olx637s0dxeziy1aaimfvo7/5db13d33cb647f33c62837e9cccdfb85.png">
+<meta property="og:updated_time" content="2018-12-10T01:35:17.306Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes GPU管理与Device Plugin机制">
+<meta name="twitter:description" content="人工智能和机器学习已经并不是什么新鲜的概念了，而这次热潮的背后，云计算的普及和应用，GPU算力的巨大提升，才是真正把机器学习和深度学习从象牙塔带到工业界的重要推手 目前摸Kubernetes两周多了，这篇博客记录一下对kubernetes支持GPU应用的理解，以及Device Plugin机制的原理">
+<meta name="twitter:image" content="http://static.zybuluo.com/stanslim/dupx4bbawd2jo3bv4hz4pw9k/WeChate08107c77dbd45c15fb5ff76f33346d4.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/01/kuberbetes支持GPU应用的理解以及Device Plugin机制的原理/"/>
+
+
+
+
+
+  <title>Kubernetes GPU管理与Device Plugin机制 | Zy Wang's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zy Wang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/01/kuberbetes支持GPU应用的理解以及Device Plugin机制的原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王振宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zy Wang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Kubernetes GPU管理与Device Plugin机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-01T21:25:35+08:00">
+                2018-12-01
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-12-10T09:35:17+08:00">
+                2018-12-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>人工智能和机器学习已经并不是什么新鲜的概念了，而这次热潮的背后，云计算的普及和应用，GPU算力的巨大提升，才是真正把机器学习和深度学习从象牙塔带到工业界的重要推手</p>
+<p>目前摸Kubernetes两周多了，这篇博客记录一下对kubernetes支持GPU应用的理解，以及Device Plugin机制的原理<br><a id="more"></a></p>
+<h2 id="Device-plugin"><a href="#Device-plugin" class="headerlink" title="Device plugin"></a><strong>Device plugin</strong></h2><p>先来看看官方对Device plugin的定义：</p>
+<p><img src="http://static.zybuluo.com/stanslim/dupx4bbawd2jo3bv4hz4pw9k/WeChate08107c77dbd45c15fb5ff76f33346d4.png" alt="WeChate08107c77dbd45c15fb5ff76f33346d4.png-275.9kB"></p>
+<p>大概意思就是：从kubernetes1.8版本开始，提供了设备插件框架，设备厂商无需修改kubernetes核心代码就可以将自己生产的设备的资源(kubernetes可管理的资源包括CPU、内存和存储资源)可以让kubelet使用(这一点与操作系统一样，所有设备厂商自己实现驱动)。设备厂商可以自己人工或者以DaemonSet方式部署，而不是定制kubernetes代码。</p>
+<p>假设，现在我的一个容器需要一个GPU来进行我的深度学习应用计算，我希望的是，我只需要在创建Pod时候在yaml文件里面，申明某一个容器需要的GPU的个数，那么Kubernetes为我创建的容器里就应该出现对应的GPU设备。</p>
+<p>kubernetes确实就是这么做的：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: v1</span><br><span class="line"><span class="attribute">kind</span>: Pod</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: cuda-vector-add</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">restartPolicy</span>: OnFailure</span><br><span class="line">  <span class="attribute">containers</span>:</span><br><span class="line">    - <span class="attribute">name</span>: cuda-vector-add</span><br><span class="line">      <span class="attribute">image</span>: <span class="string">"k8s.gcr.io/cuda-vector-add:v0.1"</span></span><br><span class="line">      <span class="attribute">resources</span>:</span><br><span class="line">        <span class="attribute">limits</span>:</span><br><span class="line">          nvidia.com/<span class="attribute">gpu</span>:</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，在上面Pod的limits字段里面，这个资源的名称是nvidia.com/gpu，资源个数为一个。也就是说它使用了NVIDIA类型的GPU，而这个名称的定义，在查看了nvidia-divice-plugin的源码中可以看到在哪里，后面我会说到。</p>
+<p>在kube-scheduler里，它不会关心你的这个nvidia.com/gpu是什么意思，只会在计算的时候把调度器里面保存的这个类型资源的使用量，减去你声明的数量而已</p>
+<p>并且，为了能够让调度器知道你现在拥有的资源数目是多少，宿主机本身需要向API Server汇报该资源的使用量，如何汇报，kube-scheduler如何删减不是我们需要做的，在kubernetes GPU的支持方案里面都是由一种叫做device-plugin的插件负责的，在这里面，就包括删减和汇报等等的逻辑。</p>
+<p>而我们需要做什么，那便是实现kubernetes支持方案divice-plugin给我们暴露出来的接口.</p>
+<p>首先说说机制：</p>
+<p>1.厂商自行实现一个管理设备资源的程序，部署到相应的节点上，我们称之为插件；<br>2.插件需要向kubelet注册，注册内容要包含自己的endpoint(endpoint就是一个用于通信的地址)以及一些其他信息(后面会说明)；<br>3.kubelet连接插件的endpoint，就此kubelet和插件就建立了联系；<br>4.kubelet监听/var/lib/kubelet/device-plugins/kubelet.sock(unix sockets)这个地址，插件监听的也是类似的地址，只是地址变成了/var/lib/kubelet/device-plugins/gpu.sock(举个例子)</p>
+<p>我先扔一张图在这里：<br><img src="http://static.zybuluo.com/stanslim/ohumw19r4lnfy4sknhoqbnp4/5db13d33cb647f33c62837e9cccdfb85.png" alt="5db13d33cb647f33c62837e9cccdfb85.png-132.5kB"></p>
+<p>kubelet与插件采用grpc通信，grpc默认使用protocol-buffer格式通信（这个protocol-buffer是Google开源的一种类似json的通信文件格式，比json更快，效率更高，因为proto会直接把内容序列化成为他自己重新编码之后的二进制文件来通信），通信接口定义在kubernetes/pkg/kubelet/apis/deviceplugin/v1beta1/api.proto(不了解protobuf和grpc的同学请自行学习)中。文件中定义了两个用于通信的接口，翻一下源码我们可以看到：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">service</span> <span class="selector-tag">Registration</span> &#123;</span><br><span class="line">	<span class="selector-tag">rpc</span> <span class="selector-tag">Register</span>(RegisterRequest) <span class="selector-tag">returns</span> (Empty) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">service</span> <span class="selector-tag">DevicePlugin</span> &#123;</span><br><span class="line">	<span class="comment">// GetDevicePluginOptions returns options to be communicated with Device</span></span><br><span class="line">        <span class="comment">// Manager</span></span><br><span class="line">	<span class="selector-tag">rpc</span> <span class="selector-tag">GetDevicePluginOptions</span>(Empty) <span class="selector-tag">returns</span> (DevicePluginOptions) &#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// ListAndWatch returns a stream of List of Devices</span></span><br><span class="line">	<span class="comment">// Whenever a Device state change or a Device disapears, ListAndWatch</span></span><br><span class="line">	<span class="comment">// returns the new list</span></span><br><span class="line">	<span class="selector-tag">rpc</span> <span class="selector-tag">ListAndWatch</span>(Empty) <span class="selector-tag">returns</span> (stream ListAndWatchResponse) &#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Allocate is called during container creation so that the Device</span></span><br><span class="line">	<span class="comment">// Plugin can run device specific operations and instruct Kubelet</span></span><br><span class="line">	<span class="comment">// of the steps to make the Device available in the container</span></span><br><span class="line">	<span class="selector-tag">rpc</span> <span class="selector-tag">Allocate</span>(AllocateRequest) <span class="selector-tag">returns</span> (AllocateResponse) &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// PreStartContainer is called, if indicated by Device Plugin during registeration phase,</span></span><br><span class="line">        <span class="comment">// before each container start. Device plugin can run device specific operations</span></span><br><span class="line">        <span class="comment">// such as reseting the device before making devices available to the container</span></span><br><span class="line">	<span class="selector-tag">rpc</span> <span class="selector-tag">PreStartContainer</span>(PreStartContainerRequest) <span class="selector-tag">returns</span> (PreStartContainerResponse) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，第一个接口Registration，用于插件向kubelete注册，这时候kubelet是服务端，插件是客户端。</p>
+<p>第二个接口，DevicePlugin是kubelet向插件所要支持，这时候kubelet是客户端，插件是服务端</p>
+<p>我们接下来可以看看插件注册的时候需要提供哪些东西给kubelet，这也是我们实现device-plugin时候需要提供给kubelet的</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> <span class="class"><span class="keyword">message</span> <span class="title">RegisterRequest</span> </span>&#123;</span><br><span class="line"> <span class="built_in">string</span> version = <span class="number">1</span>; <span class="comment">// 版本信息</span></span><br><span class="line"> <span class="built_in">string</span> endpoint = <span class="number">2</span>; <span class="comment">// 插件的endpoint</span></span><br><span class="line"> <span class="built_in">string</span> resource_name = <span class="number">3</span>; <span class="comment">// 资源名称</span></span><br><span class="line"> DevicePluginOptions options = <span class="number">4</span>; <span class="comment">// 插件选项</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 那插件选项又包含什么呢？</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">DevicePluginOptions</span> </span>&#123;</span><br><span class="line"> <span class="built_in">bool</span> pre_start_required = <span class="number">1</span>; <span class="comment">// 启动容器前是否调用DevicePlugin.PreStartContainer()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>version、endpoint、resource_name都比较好理解，pre_start_required 不是很明确，其实就是启动容器前先通知插件做一下准备，多一个机制扩展性要好一些</p>
+<p>接下来我们看看插件能为kubelet提供什么样的服务，亦或说kubelet需要插件提供什么样的功能。</p>
+<p>1.rpc GetDevicePluginOptions(Empty) returns (DevicePluginOptions) {}，这个和注册提供的信息是一样的，只是变成了kubelet可以再获取；</p>
+<p>2.rpc PreStartContainer(PreStartContainerRequest) returns (PreStartContainerResponse) {}，这个就是kubelet启动容器前调用的</p>
+<p>3.rpc ListAndWatch(Empty) returns (stream ListAndWatchResponse) {}，kubelet监听设备变化，一旦有设备更新，插件就会通知kubelet，注意此处返回是stream类型。</p>
+<p>rpc Allocate(AllocateRequest) returns (AllocateResponse) {}，这个就是kubelet向插件申请资源的接口了，</p>
+<p>再看这张图：<img src="http://static.zybuluo.com/stanslim/5olx637s0dxeziy1aaimfvo7/5db13d33cb647f33c62837e9cccdfb85.png" alt="5db13d33cb647f33c62837e9cccdfb85.png-132.5kB"></p>
+<p>这个 Device Plugin 会通过一个叫作 ListAndWatch 的 API，定期向 kubelet 汇报该 Node 上 GPU 的列表。比如，在我们的例子里，一共有三个 GPU（GPU0、GPU1 和 GPU2）。这样，kubelet 在拿到这个列表之后，就可以直接在它向 APIServer 发送的心跳里，以 Extended Resource 的方式，加上这些 GPU 的数量，比如nvidia.com/gpu=3。所以说，用户在这里是不需要关心 GPU 信息向上的汇报流程的。</p>
+<p>需要注意的是，ListAndWatch 向上汇报的信息，只有本机上 GPU 的 ID 列表，而不会有任何关于 GPU 设备本身的信息。而且 kubelet 在向 API Server 汇报的时候，只会汇报该 GPU 对应的 Extended Resource 的数量。当然，kubelet 本身，会将这个 GPU 的 ID 列表保存在自己的内存里，并通过 ListAndWatch API 定时更新。</p>
+<p>而当一个 Pod 想要使用一个 GPU 的时候，它只需要像我在本文一开始给出的例子一样，在 Pod 的 limits 字段声明nvidia.com/gpu: 1。那么接下来，Kubernetes 的调度器就会从它的缓存里，寻找 GPU 数量满足条件的 Node，然后将缓存里的 GPU 数量减 1，完成 Pod 与 Node 的绑定。</p>
+<p>这个调度成功后的 Pod 信息，自然就会被对应的 kubelet 拿来进行容器操作。而当 kubelet 发现这个 Pod 的容器请求一个 GPU 的时候，kubelet 就会从自己持有的 GPU 列表里，为这个容器分配一个 GPU。此时，kubelet 就会向本机的 Device Plugin 发起一个 Allocate() 请求。这个请求携带的参数，正是即将分配给该容器的设备 ID 列表。</p>
+<p>当 Device Plugin 收到 Allocate 请求之后，它就会根据 kubelet 传递过来的设备 ID，从 Device Plugin 里找到这些设备对应的设备路径和驱动目录。当然，这些信息，正是 Device Plugin 周期性的从本机查询到的。比如，在 NVIDIA Device Plugin 的实现里，它会定期访问 nvidia-docker 插件，从而获取到本机的 GPU 信息。</p>
+<p>而被分配 GPU 对应的设备路径和驱动目录信息被返回给 kubelet 之后，kubelet 就完成了为一个容器分配 GPU 的操作。   </p>
+<p>至此，Kubernetes 为一个 Pod 分配一个 GPU 的流程就完成了。</p>
+<p>-EOF-</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/技术/" rel="tag"> <i class="fa fa-tag"></i> 技术</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/01/对Docker和kubernetes的一些理解/" rel="next" title="关于k8s以及微服务自己的理解">
+                <i class="fa fa-chevron-left"></i> 关于k8s以及微服务自己的理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/27/Ubuntu16-04部署k8s踩过的坑/" rel="prev" title="Ubuntu16.04部署k8s踩过的坑">
+                Ubuntu16.04部署k8s踩过的坑 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/481524115144_.pic.jpg"
+                alt="王振宇" />
+            
+              <p class="site-author-name" itemprop="name">王振宇</p>
+              <p class="site-description motion-element" itemprop="description">每一个不曾起舞的日子都是对生命的辜负。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Device-plugin"><span class="nav-number">1.</span> <span class="nav-text">Device plugin</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王振宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

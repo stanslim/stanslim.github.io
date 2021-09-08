@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Ubuntu 16.04 安装Docker 和 Kubernetes 在部署docker和kubernetes的时候，最大的坑就是pull kubernetes的镜像源的时候拉不下来，最后在实验室同学的帮助下找到了国内的一个镜像源终于pull下来，另一个大坑就是部署master节点的时候，两个DNS的包一直不能running，原因是kubernetes低版本还有一个bug，需要手动删除一行代码，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu16.04部署k8s踩过的坑">
+<meta property="og:url" content="http://yoursite.com/2018/12/27/Ubuntu16-04部署k8s踩过的坑/index.html">
+<meta property="og:site_name" content="Zy Wang&#39;s Blog">
+<meta property="og:description" content="Ubuntu 16.04 安装Docker 和 Kubernetes 在部署docker和kubernetes的时候，最大的坑就是pull kubernetes的镜像源的时候拉不下来，最后在实验室同学的帮助下找到了国内的一个镜像源终于pull下来，另一个大坑就是部署master节点的时候，两个DNS的包一直不能running，原因是kubernetes低版本还有一个bug，需要手动删除一行代码，">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-27T01:32:07.084Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu16.04部署k8s踩过的坑">
+<meta name="twitter:description" content="Ubuntu 16.04 安装Docker 和 Kubernetes 在部署docker和kubernetes的时候，最大的坑就是pull kubernetes的镜像源的时候拉不下来，最后在实验室同学的帮助下找到了国内的一个镜像源终于pull下来，另一个大坑就是部署master节点的时候，两个DNS的包一直不能running，原因是kubernetes低版本还有一个bug，需要手动删除一行代码，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/27/Ubuntu16-04部署k8s踩过的坑/"/>
+
+
+
+
+
+  <title>Ubuntu16.04部署k8s踩过的坑 | Zy Wang's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zy Wang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/27/Ubuntu16-04部署k8s踩过的坑/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王振宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zy Wang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ubuntu16.04部署k8s踩过的坑</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-27T09:20:51+08:00">
+                2018-12-27
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-12-27T09:32:07+08:00">
+                2018-12-27
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p> Ubuntu 16.04 安装Docker 和 Kubernetes</p>
+<p>在部署docker和kubernetes的时候，最大的坑就是pull kubernetes的镜像源的时候拉不下来，最后在实验室同学的帮助下找到了国内的一个镜像源终于pull下来，另一个大坑就是部署master节点的时候，两个DNS的包一直不能running，原因是kubernetes低版本还有一个bug，需要手动删除一行代码，最新版本的k8s已经修复了这个bug</p>
+<p>另外注意，在Ubuntu的环境下，Docker，kubeadm这些的版本自己一定要记好，有时候版本不对也是要出问题的</p>
+<a id="more"></a>
+<h3 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h3><h5 id="方法一："><a href="#方法一：" class="headerlink" title="方法一："></a>方法一：</h5><p>配置docker-ce的镜像源</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common</span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo apt-key add -</span><br><span class="line">sudo apt update</span><br></pre></td></tr></table></figure>
+<p>安装docker-ce软件包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install docker-ce</span><br></pre></td></tr></table></figure>
+<p>方法二(可以指定安装版本)：</p>
+<p>采用本地安装</p>
+<p>首先下载docker-ce的软件包，可以在<a href="https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/找到各个版本，这里我们选择18.06.1下载。" target="_blank" rel="noopener">https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/找到各个版本，这里我们选择18.06.1下载。</a></p>
+<p>然后使用命令安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -i *.deb</span><br></pre></td></tr></table></figure>
+<h3 id="安装Kubernetes"><a href="#安装Kubernetes" class="headerlink" title="安装Kubernetes"></a>安装Kubernetes</h3><ul>
+<li>添加Kubernetes的镜像源</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">apt-get update &amp;&amp; apt-get install -y apt-transport-https</span><br><span class="line">curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - </span><br><span class="line">cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list</span><br><span class="line">deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main</span><br><span class="line">EOF  </span><br><span class="line">apt-get update</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装Kubernetes的核心软件Kubeadm Kubectl Kubelet</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install -y kubeadm kubectl kubelet</span><br></pre></td></tr></table></figure>
+<p>其中 kubelet 是运行时支撑软件，kubeadm 是集群配置软件，kubectl 是集群配置软件。</p>
+<p>PS：安装时可以通过Kubeadm=1.12.2-00指定安装版本。</p>
+<h3 id="搭建Kubernetes集群"><a href="#搭建Kubernetes集群" class="headerlink" title="搭建Kubernetes集群"></a>搭建Kubernetes集群</h3><ul>
+<li>主节点初始化</li>
+</ul>
+<p>ubernetes 除了 kubelet 之外的所有服务均由容器形式运行，因此主节点的配置其实是根据 yaml 文件的描述 pull image 和 run container 的过程，但是由于默认的所有容器从 google 服务器下载，实际上是由于网络问题，其实是不可下载的。</p>
+<p>这里需要编写脚本从国内加速镜像预下载所需要的容器镜像，编写的脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> replace gcr.io/google-containers/federation-controller-manager-arm64:v1.3.1-beta.1 to real image</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> this will convert gcr.io/google-containers/federation-controller-manager-arm64:v1.3.1-beta.1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> to anjia0532/google-containers.federation-controller-manager-arm64:v1.3.1-beta.1 and pull it</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> k8s.gcr.io/&#123;image&#125;/&#123;tag&#125; &lt;==&gt; gcr.io/google-containers/&#123;image&#125;/&#123;tag&#125; &lt;==&gt; anjia0532/google-containers.&#123;image&#125;/&#123;tag&#125;</span></span><br><span class="line"></span><br><span class="line">images=$(cat img.txt)</span><br><span class="line"><span class="meta">#</span><span class="bash">or</span></span><br><span class="line"><span class="meta">#</span><span class="bash">images=$(cat &lt;&lt;EOF</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> gcr.io/google-containers/federation-controller-manager-arm64:v1.3.1-beta.1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> gcr.io/google-containers/federation-controller-manager-arm64:v1.3.1-beta.1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> gcr.io/google-containers/federation-controller-manager-arm64:v1.3.1-beta.1</span></span><br><span class="line"><span class="meta">#</span><span class="bash">EOF</span></span><br><span class="line"><span class="meta">#</span><span class="bash">)</span></span><br><span class="line"></span><br><span class="line">eval $(echo $&#123;images&#125;|</span><br><span class="line">sed 's/k8s\.gcr\.io/anjia0532\/google-containers/g;s/gcr\.io/anjia0532/g;s/\//\./g;s/ /\n/g;s/anjia0532\./anjia0532\//g' |</span><br><span class="line">uniq |</span><br><span class="line">awk '&#123;print "docker pull "$1";"&#125;'</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> this code will retag all of anjia0532<span class="string">'s image from local  e.g. anjia0532/google-containers.federation-controller-manager-arm64:v1.3.1-beta.1</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> to gcr.io/google-containers/federation-controller-manager-arm64:v1.3.1-beta.1</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> k8s.gcr.io/&#123;image&#125;/&#123;tag&#125; &lt;==&gt; gcr.io/google-containers/&#123;image&#125;/&#123;tag&#125; &lt;==&gt; anjia0532/google-containers.&#123;image&#125;/&#123;tag&#125;</span></span><br><span class="line"></span><br><span class="line">for img in $(docker images --format "&#123;&#123;.Repository&#125;&#125;:&#123;&#123;.Tag&#125;&#125;"| grep "anjia0532"); do</span><br><span class="line">n=$(echo $&#123;img&#125;| awk -F'[/.:]' '&#123;printf "gcr.io/%s",$2&#125;')</span><br><span class="line">image=$(echo $&#123;img&#125;| awk -F'[/.:]' '&#123;printf "/%s",$3&#125;')</span><br><span class="line">tag=$(echo $&#123;img&#125;| awk -F'[:]' '&#123;printf ":%s",$2&#125;')</span><br><span class="line">docker tag $img "$&#123;n&#125;$&#123;image&#125;$&#123;tag&#125;"</span><br><span class="line"><span class="meta">#</span><span class="bash">[[ <span class="variable">$&#123;n&#125;</span> == <span class="string">"gcr.io/google-containers"</span> ]] &amp;&amp;</span></span><br><span class="line">docker tag $img "k8s.gcr.io$&#123;image&#125;$&#123;tag&#125;"</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>其中的 image.txt 存储的是需要的镜像的下载地址和名称，对于 master 节点，其内容如下：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">k8s<span class="selector-class">.gcr</span><span class="selector-class">.io</span>/kube-apiserver:v1.<span class="number">12.2</span></span><br><span class="line">k8s<span class="selector-class">.gcr</span><span class="selector-class">.io</span>/kube-controller-manager:v1.<span class="number">12.2</span></span><br><span class="line">k8s<span class="selector-class">.gcr</span><span class="selector-class">.io</span>/kube-scheduler:v1.<span class="number">12.2</span></span><br><span class="line">k8s<span class="selector-class">.gcr</span><span class="selector-class">.io</span>/kube-proxy:v1.<span class="number">12.2</span></span><br><span class="line">k8s<span class="selector-class">.gcr</span><span class="selector-class">.io</span>/pause:<span class="number">3.1</span></span><br><span class="line">k8s<span class="selector-class">.gcr</span><span class="selector-class">.io</span>/etcd:<span class="number">3.2</span>.<span class="number">24</span></span><br><span class="line">k8s<span class="selector-class">.gcr</span><span class="selector-class">.io</span>/coredns:<span class="number">1.2</span>.<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p><strong>注释掉 <code>/etc/fstab</code> 文件里面的<code>swap</code>分区相关的信息，并重启系统</strong></p>
+<p>PS：这一步很关键，没有关闭会出现问题。</p>
+<p>再执性主节点初始化命令 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --pod-network-cidr=10.244.0.0/16</span><br></pre></td></tr></table></figure>
+<p>初始化完成之后，会给出三条命令需要去执行。</p>
+<p>可以使用<code>kubectl get pod --all-namespaces</code>命令查看pods</p>
+<ul>
+<li>添加从节点到集群</li>
+</ul>
+<p>类似主节点的配置，从节点也需要预下载需要的 Docker image, 我们依然使用之前下载脚本，image.txt的内容修改为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">k8s.gcr.io/kube-proxy:v1.12.2</span><br><span class="line">k8s.gcr.io/pause:3.1</span><br></pre></td></tr></table></figure>
+<p>下载镜像完成后，执行以下命令将从节点加入集群：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 192.168.0.15:6443 --token rxiy9d.ud98784w3w7ohjmc --discovery-token-ca-cert-hash sha256:ae27d4ce8f0ee0f7e2fe845864e1dbf0a432b6285b32ffec45350bf66f06d1f6</span><br></pre></td></tr></table></figure>
+<ul>
+<li>主节点部署Dashboard</li>
+</ul>
+<p>首利用脚本下载相关镜像，img.txt文件的内容为：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">k8s<span class="selector-class">.gcr</span><span class="selector-class">.io</span>/kubernetes-dashboard-amd64:v1.<span class="number">10.0</span></span><br></pre></td></tr></table></figure>
+<p>接下来我们需要一个kubernetes-dashboard.yaml的配置文件，可以直接在<a href="https://github.com/kubernetes/dashboard" target="_blank" rel="noopener">Github</a>中下载：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml</span><br></pre></td></tr></table></figure>
+<p>PS：yaml文件中kubernetes-dashboard-amd64的版本为1.10.1，本地下载的镜像为1.10.0，需要修改yaml文件。</p>
+<p>执行以下脚本部署监控软件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f kubernetes-dashboard.yaml</span><br></pre></td></tr></table></figure>
+<p>监控界面需要用户登录才可访问，为此我们需要建立相关用户，然后用该用户的 token 登录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建一个ServiceAccount</span></span><br><span class="line">cat &lt;&lt;EOF | kubectl create -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">name: admin-user</span><br><span class="line">namespace: kube-system</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">再创建一个ClusterRoleBinding,给admin-user相应的权限</span></span><br><span class="line">cat &lt;&lt;EOF | kubectl create -f -</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">metadata:</span><br><span class="line">name: admin-user</span><br><span class="line">roleRef:</span><br><span class="line">apiGroup: rbac.authorization.k8s.io</span><br><span class="line">kind: ClusterRole</span><br><span class="line">name: cluster-admin</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">name: admin-user</span><br><span class="line">namespace: kube-system</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查找admin-user的token</span></span><br><span class="line">kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '&#123;print $1&#125;')</span><br></pre></td></tr></table></figure>
+<p>执行命令启动proxy</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy</span><br></pre></td></tr></table></figure>
+<p>主节点启动浏览器，访问<code>http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/</code></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/01/kuberbetes支持GPU应用的理解以及Device Plugin机制的原理/" rel="next" title="Kubernetes GPU管理与Device Plugin机制">
+                <i class="fa fa-chevron-left"></i> Kubernetes GPU管理与Device Plugin机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/09/k8s识别mlu100计算卡小结/" rel="prev" title="k8s识别mlu100计算卡小结">
+                k8s识别mlu100计算卡小结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/481524115144_.pic.jpg"
+                alt="王振宇" />
+            
+              <p class="site-author-name" itemprop="name">王振宇</p>
+              <p class="site-description motion-element" itemprop="description">每一个不曾起舞的日子都是对生命的辜负。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Docker"><span class="nav-number">1.</span> <span class="nav-text">安装Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法一："><span class="nav-number">1.0.1.</span> <span class="nav-text">方法一：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Kubernetes"><span class="nav-number">2.</span> <span class="nav-text">安装Kubernetes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建Kubernetes集群"><span class="nav-number">3.</span> <span class="nav-text">搭建Kubernetes集群</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王振宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

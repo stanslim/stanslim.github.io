@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="git命令," />
+
+
+
+
+
+
+
+
+
+
+<meta name="keywords" content="git命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git操作">
+<meta property="og:url" content="http://yoursite.com/2018/06/22/Git操作记录/index.html">
+<meta property="og:site_name" content="Zy Wang&#39;s Blog">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/06/22/Git操作记录/bg2015120901.jpg">
+<meta property="og:updated_time" content="2018-12-05T01:01:28.850Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git操作">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/22/Git操作记录/bg2015120901.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/22/Git操作记录/"/>
+
+
+
+
+
+  <title>Git操作 | Zy Wang's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zy Wang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/22/Git操作记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王振宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zy Wang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Git操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-22T16:31:41+08:00">
+                2018-06-22
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2018-12-05T09:01:28+08:00">
+                2018-12-05
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/2018/06/22/Git操作记录/bg2015120901.jpg" alt=""></p>
+<a id="more"></a>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a><strong>概述</strong></h2><p>很多人都知道，Linus在1991年创建了开源的Linux，从此，Linux系统不断发展，已经成为最大的服务器系统软件了。</p>
+<p>Linus虽然创建了Linux，但Linux的壮大是靠全世界热心的志愿者参与的，这么多人在世界各地为Linux编写代码，那Linux的代码是如何管理的呢？</p>
+<p>事实是，在2002年以前，世界各地的志愿者把源代码文件通过diff的方式发给Linus，然后由Linus本人通过手工方式合并代码！</p>
+<p>你也许会想，为什么Linus不把Linux代码放到版本控制系统里呢？不是有CVS、SVN这些免费的版本控制系统吗？因为Linus坚定地反对CVS和SVN，这些集中式的版本控制系统不但速度慢，而且必须联网才能使用。有一些商用的版本控制系统，虽然比CVS、SVN好用，但那是付费的，和Linux的开源精神不符。</p>
+<p>不过，到了2002年，Linux系统已经发展了十年了，代码库之大让Linus很难继续通过手工方式管理了，社区的弟兄们也对这种方式表达了强烈不满，于是Linus选择了一个商业的版本控制系统BitKeeper，BitKeeper的东家BitMover公司出于人道主义精神，授权Linux社区免费使用这个版本控制系统。</p>
+<p>安定团结的大好局面在2005年就被打破了，原因是Linux社区牛人聚集，不免沾染了一些梁山好汉的江湖习气。开发Samba的Andrew试图破解BitKeeper的协议（这么干的其实也不只他一个），被BitMover公司发现了（监控工作做得不错！），于是BitMover公司怒了，要收回Linux社区的免费使用权。</p>
+<p>Linus可以向BitMover公司道个歉，保证以后严格管教弟兄们，嗯，这是不可能的。实际情况是这样的：</p>
+<p>Linus花了两周时间自己用C写了一个分布式版本控制系统，这就是Git！一个月之内，Linux系统的源码已经由Git管理了！牛是怎么定义的呢？大家可以体会一下。</p>
+<p>Git迅速成为最流行的分布式版本控制系统，尤其是2008年，GitHub网站上线了，它为开源项目免费提供Git存储，无数开源项目开始迁移至GitHub，包括jQuery，PHP，Ruby等等。</p>
+<p>历史就是这么偶然，如果不是当年BitMover公司威胁Linux社区，可能现在我们就没有免费而超级好用的Git了。</p>
+<p>以上内容参考了<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000" target="_blank" rel="noopener">廖雪峰老师的博客</a></p>
+<p>Git和其他版本控制系统如SVN的一个不同之处就是有暂存区的概念。</p>
+<p><strong>工作区（Working Directory）</strong></p>
+<p>就是你在电脑里能看到的目录，比如我的git文件夹就是一个工作区，它可以是一个文件。</p>
+<p><strong>版本库（Repository）</strong></p>
+<p>工作区有一个隐藏目录.git，这个不算工作区，而是Git的版本库。我的理解就是开发者电脑上维护的一个仓库</p>
+<p><strong>远程仓库：（remote）</strong></p>
+<p>也就是公司使用的gitlab，或者github</p>
+<p>Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。</p>
+<p>把大象放入冰箱需要三部操作，而把本地仓库放到git需要两步，我们的工作区通过git add之后，把文件加入到暂存区，这时候可以add多个，之后通过git commit提交到git仓库中，再提交到远程仓库的时候使用push</p>
+<h2 id="Git配置"><a href="#Git配置" class="headerlink" title="Git配置"></a><strong>Git配置</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 显示当前的Git配置，分支追踪关系等等</span><br><span class="line">$ git config --list</span><br><span class="line"></span><br><span class="line"># 设置提交代码时的用户信息，注意：加--global，表示全局，否则为当前项目</span><br><span class="line">$ git config [--global] user.name &quot;name&quot;</span><br><span class="line">$ git config [--global] user.email &quot;email address&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="增加-提交文件"><a href="#增加-提交文件" class="headerlink" title="增加/提交文件"></a><strong>增加/提交文件</strong></h2><h3 id="增加文件"><a href="#增加文件" class="headerlink" title="增加文件"></a><strong>增加文件</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 添加当前目录的所有文件到暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加指定文件到暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add [file1] [file2] ...</span></span><br></pre></td></tr></table></figure>
+<h3 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a><strong>提交文件</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 提交暂存区到仓库区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用一次新的commit，替代上一次提交</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果代码没有任何新变化，则用来改写上一次commit的提交信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit --amend -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 还有可以修改上次提交author和committor信息</span></span><br></pre></td></tr></table></figure>
+<h2 id="增加远程仓库"><a href="#增加远程仓库" class="headerlink" title="增加远程仓库"></a><strong>增加远程仓库</strong></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 增加一个新的远程仓库，并命名，比如：</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git remote add origin ssh://xxx.xx.xx/xx.git</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote add [shortname] [url]</span></span><br></pre></td></tr></table></figure>
+<h2 id="追踪关系"><a href="#追踪关系" class="headerlink" title="追踪关系"></a><strong>追踪关系</strong></h2><p>在某些场合，Git会自动在本地分支与远程分支之间，建立一种追踪关系（tracking）。比如，在git clone的时候，所有本地分支默认与远程主机的同名分支，建立追踪关系，也就是说，本地的master分支自动”追踪”origin/master分支，Git也允许手动建立追踪关系，但是一般并不这样搞。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下面命令指定本地master分支追踪origin/dev分支。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch --<span class="built_in">set</span>-upstream master origin/dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下面的命令可以看到当前分支追踪的远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -vv</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="远程同步"><a href="#远程同步" class="headerlink" title="远程同步"></a><strong>远程同步</strong></h2><h4 id="push"><a href="#push" class="headerlink" title="push"></a>push</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> =========================git push==============================</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 注意，分支推送顺序的写法是&lt;来源地&gt;:&lt;目的地&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 所以git pull是&lt;远程分支&gt;:&lt;本地分支&gt;，而git push是&lt;本地分支&gt;:&lt;远程分支&gt;。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push &lt;远程主机名&gt; &lt;本地分支名&gt;:&lt;远程分支名&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果省略远程分支名，则表示将本地分支推送与之存在<span class="string">"追踪关系"</span>的远程分支（通常两者同名）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果该远程分支不存在，则会被新建。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin master</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 上面命令表示，将本地的master分支推送到origin主机的master分支。</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果当前分支与远程分支之间存在追踪关系，则本地分支和远程分支都可以省略。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 上面命令表示，将当前分支推送到origin主机的对应分支。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果当前分支只有一个追踪分支，那么主机名都可以省略。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push</span></span><br></pre></td></tr></table></figure>
+<h4 id="pull"><a href="#pull" class="headerlink" title="pull"></a>pull</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> =========================git pull==============================</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git pull命令的作用是，取回远程主机某个分支的更新，再与本地的指定分支合并。它的完整格式稍稍有点复杂。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 比如取远程主机别人的分支xxx与自己的分支dev合并，则可以如下操作</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git pull origin xxx:dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果远程分支与当前分支名称一致，则冒号后面的部分可以省略。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git pull origin dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果当前分支与远程分支存在追踪关系，git pull就可以省略远程分支名。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git pull origin</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 上面命令表示，本地的当前分支自动与对应的origin主机<span class="string">"追踪分支"</span>（remote-tracking branch）进行合并。</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果当前分支只有一个追踪分支，连远程主机名都可以省略</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git pull</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 上面命令表示，当前分支自动与唯一一个追踪分支进行合并。</span></span><br></pre></td></tr></table></figure>
+<h2 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a><strong>分支管理</strong></h2><p>一般最常见的就是一个master分支和一个dev分支，dev分支用于日常开发，master分支用于版本更新版本发布。</p>
+<h3 id="查看分支"><a href="#查看分支" class="headerlink" title="查看分支"></a>查看分支</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 列出所有本地分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看远程所有分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -r</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 列出所有本地分支和远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -a</span></span><br></pre></td></tr></table></figure>
+<h3 id="创建分支"><a href="#创建分支" class="headerlink" title="创建分支"></a>创建分支</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 基于当前分支创建新的分支，比如在master分支外面在开一个dev分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换到新的分支dev</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果将上面两条命令合并在一起，就是基于当前创建新分支(dev)的同时，切换到新分支(dev)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 另外，前面是基于本地分支新建分支，如果想要在远程分支的基础上新建分支feature来</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b feature origin/feature</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换到上一个分支的快捷方式，比如master</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -</span></span><br></pre></td></tr></table></figure>
+<h3 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 如果当前分支是master，需要合并dev分支上修改的内容</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git merge dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 比如在dev上开发了一段时间，要将代码合并到master分支</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以先切换到master分支，然后执行下面命令</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git merge dev --no-ff</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 其中--no-ff的意思是，不将dev所有的提交节点合并到master分支上</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这样做的好处是能保证master分支节点干净</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看查看尚未合并的分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch --no-merged</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看哪些分支已被并入当前分支（译注：也就是说哪些分支是当前分支的直接上游。）</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch --merged</span></span><br></pre></td></tr></table></figure>
+<h3 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除完成使命的分支（比如：已经合并完成的分支fix-bug）,用小写-d作为参数，这样如果分支中还包含着尚未合并进来的工作成果，会出现错误提示；</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -d fix-bug</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果用-D则是强制删除分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -D fix-bug</span></span><br></pre></td></tr></table></figure>
+<h2 id="标签管理"><a href="#标签管理" class="headerlink" title="标签管理"></a><strong>标签管理</strong></h2><p>标签其中一个用处是用来标记一些版本信息，比如在master分支上打上v1.0、v1.1等版本信息，这样版本更新信息一目了然。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在当前commit上添加标签tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag v1.0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以指定给之前的commit添加tag，commit_id用commit号前几位就行（4位好像可以）</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag v0.9 commit_id</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认情况下，git push 并不会把标签传送到远端服务器上，只有通过显式命令才能分享标签到远端仓库。其命令格式如同推送分支，运行 git push origin [tagname] 即可：</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin v1.1.0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者一次性推送所有新增的标签</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin --tags</span></span><br></pre></td></tr></table></figure>
+<h2 id="储藏"><a href="#储藏" class="headerlink" title="储藏"></a><strong>储藏</strong></h2><p>经常有这样的事情发生，当你正在进行项目中某一部分的工作，里面的东西处于一个比较杂乱的状态，而你想转到其他分支上进行一些工作。问题是，你不想提交进行了一半的工作，否则以后你无法回到这个工作点。解决这个问题的办法就是git stash命令。</p>
+<p>“‘储藏”“可以获取你工作目录的中间状态——也就是你修改过的「被追踪」的文件和暂存的变更——并将它保存到一个未完结变更的堆栈中，随时可以重新应用。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将追踪过得文件的变更存入堆栈</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看堆栈中所有的储藏记录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash list</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 取出刚刚存入堆栈的变更(也就是栈顶的储藏)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash pop</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a><strong>撤销</strong></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 修改了一些文件,还没add放入暂存区，这时可以checkout，就是按照暂存区的文件来恢复工作区，使得工作区文件于暂存区文件保持一致。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git checkout . 表示恢复所有文件。</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout .</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复暂存区的指定文件到工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout [file]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 另外一种情况，假如我不小心add到了暂存区，但是还没commit，这时候想恢复暂存区，就需要重置暂存区了。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果不是想与上一次commit保持一致，而是某个指定的commit，同时重置暂存区，但工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 再一种情况，直接是工作区的修改都想重置了，这种情况一般要小心，因为你没提交的工作区的修改很有可能就没有了，因为不仅仅是暂存区被重置，还有工作区也会被重置。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置【暂存区与工作区】，与上一次commit保持一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard [commit]</span></span><br></pre></td></tr></table></figure>
+<p>-EOF-</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git命令/" rel="tag"> <i class="fa fa-tag"></i> git命令</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/19/杭州两日/" rel="next" title="杭州两日">
+                <i class="fa fa-chevron-left"></i> 杭州两日
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/24/24/" rel="prev" title="24">
+                24 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/481524115144_.pic.jpg"
+                alt="王振宇" />
+            
+              <p class="site-author-name" itemprop="name">王振宇</p>
+              <p class="site-description motion-element" itemprop="description">每一个不曾起舞的日子都是对生命的辜负。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git配置"><span class="nav-number">2.</span> <span class="nav-text">Git配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增加-提交文件"><span class="nav-number">3.</span> <span class="nav-text">增加/提交文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#增加文件"><span class="nav-number">3.1.</span> <span class="nav-text">增加文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交文件"><span class="nav-number">3.2.</span> <span class="nav-text">提交文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增加远程仓库"><span class="nav-number">4.</span> <span class="nav-text">增加远程仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#追踪关系"><span class="nav-number">5.</span> <span class="nav-text">追踪关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程同步"><span class="nav-number">6.</span> <span class="nav-text">远程同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#push"><span class="nav-number">6.0.1.</span> <span class="nav-text">push</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pull"><span class="nav-number">6.0.2.</span> <span class="nav-text">pull</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分支管理"><span class="nav-number">7.</span> <span class="nav-text">分支管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看分支"><span class="nav-number">7.1.</span> <span class="nav-text">查看分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建分支"><span class="nav-number">7.2.</span> <span class="nav-text">创建分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合并分支"><span class="nav-number">7.3.</span> <span class="nav-text">合并分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除分支"><span class="nav-number">7.4.</span> <span class="nav-text">删除分支</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签管理"><span class="nav-number">8.</span> <span class="nav-text">标签管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#储藏"><span class="nav-number">9.</span> <span class="nav-text">储藏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#撤销"><span class="nav-number">10.</span> <span class="nav-text">撤销</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王振宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

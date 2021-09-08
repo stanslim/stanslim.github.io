@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这个疫情搞的，一是闲，二是气 闲不用说了，气是气在….好吧气其实也不用说了。。。 现在吧，有些人，或者媒体，说话没有公信力。以后再看到类似话语，我们应该先捂住口鼻，等臭味散了。再思考几天，还要接着捂住口鼻。 好了言归正传。 一直以来，对学习数学，物理，天文学等自然科学的人带有一种敬畏之心 几年前，“数学之美”系列文章刊载于谷歌黑板报，获得上百万次点击。拜读“数学之美”后才发现，大学时学的数学知识，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从数学之美，到量子世界">
+<meta property="og:url" content="http://yoursite.com/2020/02/01/从数学之美，到量子世界/index.html">
+<meta property="og:site_name" content="Zy Wang&#39;s Blog">
+<meta property="og:description" content="这个疫情搞的，一是闲，二是气 闲不用说了，气是气在….好吧气其实也不用说了。。。 现在吧，有些人，或者媒体，说话没有公信力。以后再看到类似话语，我们应该先捂住口鼻，等臭味散了。再思考几天，还要接着捂住口鼻。 好了言归正传。 一直以来，对学习数学，物理，天文学等自然科学的人带有一种敬畏之心 几年前，“数学之美”系列文章刊载于谷歌黑板报，获得上百万次点击。拜读“数学之美”后才发现，大学时学的数学知识，">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2020/02/01/从数学之美，到量子世界/roman-mager-59976-unsplash.jpg">
+<meta property="og:image" content="http://yoursite.com/2020/02/01/从数学之美，到量子世界/WechatIMG137.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/01/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/01/从数学之美，到量子世界/18bitshiyan.jpg">
+<meta property="og:image" content="http://yoursite.com/2020/02/01/从数学之美，到量子世界/偏振纠缠仪器.jpg">
+<meta property="og:updated_time" content="2020-08-24T08:00:35.069Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从数学之美，到量子世界">
+<meta name="twitter:description" content="这个疫情搞的，一是闲，二是气 闲不用说了，气是气在….好吧气其实也不用说了。。。 现在吧，有些人，或者媒体，说话没有公信力。以后再看到类似话语，我们应该先捂住口鼻，等臭味散了。再思考几天，还要接着捂住口鼻。 好了言归正传。 一直以来，对学习数学，物理，天文学等自然科学的人带有一种敬畏之心 几年前，“数学之美”系列文章刊载于谷歌黑板报，获得上百万次点击。拜读“数学之美”后才发现，大学时学的数学知识，">
+<meta name="twitter:image" content="http://yoursite.com/2020/02/01/从数学之美，到量子世界/roman-mager-59976-unsplash.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/01/从数学之美，到量子世界/"/>
+
+
+
+
+
+  <title>从数学之美，到量子世界 | Zy Wang's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zy Wang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/01/从数学之美，到量子世界/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王振宇">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/481524115144_.pic.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zy Wang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从数学之美，到量子世界</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-02-01T20:06:51+08:00">
+                2020-02-01
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-08-24T16:00:35+08:00">
+                2020-08-24
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这个疫情搞的，一是闲，二是气</p>
+<p>闲不用说了，气是气在….好吧气其实也不用说了。。。</p>
+<p>现在吧，有些人，或者媒体，说话没有公信力。以后再看到类似话语，我们应该先捂住口鼻，等臭味散了。再思考几天，还要接着捂住口鼻。</p>
+<p>好了言归正传。</p>
+<p>一直以来，对学习数学，物理，天文学等自然科学的人带有一种敬畏之心</p>
+<p>几年前，“数学之美”系列文章刊载于谷歌黑板报，获得上百万次点击。拜读“数学之美”后才发现，大学时学的数学知识，马尔可夫链、矩阵计算，甚至余弦函数原来都如此亲切，并且栩栩如生，自然语言和信息处理竟然可以这么有趣。</p>
+<p>作为一个毫无疑问的菜鸡，从最简单的质因数分解开始，结合计算机专业理论的一些简单概念，记录一些简单的心得。</p>
+<p><img src="/2020/02/01/从数学之美，到量子世界/roman-mager-59976-unsplash.jpg" alt=""></p>
+<a id="more"></a>
+<h2 id="关于质因数分解"><a href="#关于质因数分解" class="headerlink" title="关于质因数分解"></a>关于质因数分解</h2><p>密码学与数学紧密相关，人们利用数学使密码无法求解，从而达到保密的作用</p>
+<p>事实上，在密码学中，大多数情况下是有解的，只不过破解需要大量的时间</p>
+<p>而密码学最基础的RSA算法运用的思想，就是质因数分解</p>
+<p>什么是质因数分解？</p>
+<p>找出两个随机的质数<script type="math/tex">p1,p2</script>,求得他们的积<script type="math/tex">n=p1*p2</script></p>
+<p>现在反过来，给你一个刚刚这个n，让你找出是由哪两个质数相乘的到的它，也就是说，需要你找出这个<script type="math/tex">p1,p2</script></p>
+<p>如果这个n很小，比如n=21,你可以很容易的分解他21=3*7，<script type="math/tex">p1,p2</script>找到了，等于3和7，如果这个n很大呢，手算是没戏了，你需要借助计算机进行迭代枚举，一个一个的相乘，看哪两个质数相乘得n</p>
+<p>而对于这个问题，即使是计算机，所需要的时间都要d大到将世界上所有计算机的计算资源加起来计算<br>还需要几万亿年吧</p>
+<p>这么简单的初中就学过的概念，应用在生活中就是现在各大银行使用的保密算法的基石，并且无解</p>
+<h2 id="关于密码学"><a href="#关于密码学" class="headerlink" title="关于密码学"></a>关于密码学</h2><p>密码学，就是锁和钥匙</p>
+<p>在密码学中的两大分类，对称算法和非对称算法</p>
+<h3 id="关于对称算法"><a href="#关于对称算法" class="headerlink" title="关于对称算法"></a>关于对称算法</h3><p>有俩人A要给B发消息，黑客C在网络想要监听A给B发的是什么消息</p>
+<p>所以A和B要想办法加密这条信息，防止C偷听</p>
+<p>古典的思路是：A和B提前准备了一个盒子，并配了两把钥匙。每次A把秘密装进盒子里，然后用钥匙锁起来寄给B。B接到盒子后用钥匙打开，便可以知道这个秘密了。</p>
+<p>即便C通过网络截取了盒子，他没有钥匙他也打不开</p>
+<p>这种方式就叫做对称加密，所谓对称，就是说A和B的这两把钥匙使用的是同一把钥匙</p>
+<p>其中，这个秘密本身叫做明文，用来加密的钥匙叫做密钥，锁好了的信息叫做密文</p>
+<p>A和B都有密钥，所以他们都可以随意地把明文翻译成密文，或是把密文翻译成明文。但C没有密钥，所以无法破解密文。</p>
+<p><img src="/2020/02/01/从数学之美，到量子世界/WechatIMG137.png" alt=""></p>
+<p>可是在现代网络的实际应用中，这种加密方式会有很多很多的问题</p>
+<p>其中最大的问题是，很多情况下，A和C没有时间或者机会商量好这个钥匙，也就无法加密和解密</p>
+<p>更比如说，A和B在商量钥匙的时候，C就已经在监听了，这样的话，我们所商量的钥匙C就已经监听到了</p>
+<p>所以我们需要更好的办法，这就是<strong>非对称加密</strong></p>
+<h3 id="关于非对称算法"><a href="#关于非对称算法" class="headerlink" title="关于非对称算法"></a>关于非对称算法</h3><p>在一般的认知里，密匙，既可以加密也可以解密，就像平时我们锁门一样，一把钥匙既可以锁门也可以开门</p>
+<p>但是在非对称算法的概念里，密钥有两种：公有密钥、私有秘钥。</p>
+<p>公有密钥用于上锁（加密）。</p>
+<p>私有密钥用于解锁（解密）。</p>
+<p>因为A只需要上锁，所以她只需要公有密匙就够了。私有密匙只有B拥有。</p>
+<p>A会先通知B：我要告诉你一件事。然后B接着就会生成一把锁，并制作两种钥匙：公有密钥和私有秘钥。B会把公有密钥发给A，然后A会用公有密钥加密信息。A把上锁的密文发回来后，B再用自己的私有密钥解密，并得到明文。</p>
+<p>整个过程中，只有B拥有私有密钥。</p>
+<p>B的私有秘钥不会交给任何人的。</p>
+<p>纵使C获得了明文和公开密钥，C也无法解密。因为只有私有密匙才可以解密。</p>
+<p>非对称加密的基本原理就是这样</p>
+<p>为了打造这两把钥匙，一把用于上锁，一把用于开锁，现在我们还需要利用一些计算机和数论方面的知识。(接下来的部分可能有些枯燥)</p>
+<p><a href="#jump">对数学不太感兴趣的同学可以跳过，点这里！！！</a></p>
+<h2 id="关于数论以及RSA"><a href="#关于数论以及RSA" class="headerlink" title="关于数论以及RSA"></a>关于数论以及RSA</h2><p><img src="/2020/02/01/从数学之美，到量子世界/WeChat6f108598f6029da3fae489c3005f5727.png" alt="" title="欧拉"></p>
+<h3 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h3><p>φ(n)表示小于n的正整数中与n互质的数的数目。（互质表示公因数为1）</p>
+<p>比如想要知道<script type="math/tex">φ(10)</script>的话，我们就可以看[1, 10)中和10互质的整数，也就是1、3、7、9这四个数。</p>
+<p>（2、4、6、8和10有公因数2，而5和10有公因数10）。</p>
+<p>所以<script type="math/tex">φ(10)=4</script>。</p>
+<p>比如想要知道<script type="math/tex">φ(21)</script>的话，我们就可以看[1, 21)中和21互质的整数，也就是1、2、4、5、8、10、11、13、16、17、19、20这12个数。</p>
+<p>（3、6、9、12、15、18和21有公因数3，而7、14和21有公因数7）。所以φ(21)=12。</p>
+<p>我们惊喜地发现!!!</p>
+<p>如果n能写作两个不同质数 p_1 与 p_2 的乘积，那么</p>
+<script type="math/tex; mode=display">φ(n)=(p_1-1)(p_2-1)</script><h3 id="欧拉公式"><a href="#欧拉公式" class="headerlink" title="欧拉公式"></a>欧拉公式</h3><p>若<script type="math/tex">a</script>与<script type="math/tex">n</script>互质，则<script type="math/tex">a^{φ(n)} = 1(mod n)</script></p>
+<p>用拉格朗日证明上式</p>
+<h3 id="乘法逆元"><a href="#乘法逆元" class="headerlink" title="乘法逆元"></a>乘法逆元</h3><p>如果<script type="math/tex">ab ≡ 1^{（mod m）}</script>，则称a和b为关于m互为乘法逆元。</p>
+<p>已知a求b的方法：因为<script type="math/tex">ab ≡ 1^{（mod m）}</script>，所以不妨设ab+mk=1，其中a和m为已知数。</p>
+<p>可以利用扩展欧几里得算法，可以在多项式时间内，计算出来一个乘法逆元b。</p>
+<p>(事实上，b的解不唯一，这里只是求出了一个b。)</p>
+<h3 id="两把钥匙"><a href="#两把钥匙" class="headerlink" title="两把钥匙"></a>两把钥匙</h3><p>有了这些数学基础，我们就可以开始构建刚才提到的两把“钥匙🔑”了</p>
+<p>1、Bob随机生成了一些非常非常大的整数，并用Miller-Rabin算法检测它们是不是质数，直到找到两个大质数——<script type="math/tex">p_1</script> 和 <script type="math/tex">p_2</script>。</p>
+<p>2、Bob计算两个质数的乘积 <script type="math/tex">n=p_1p_2</script></p>
+<p>3、Bob计算 <script type="math/tex">φ(n)=(p_1-1)(p_2-1)</script></p>
+<p><strong>请注意！因为n太大了，而分解质因数需要指数时间，所以没有人能够将n质因数分解。</strong></p>
+<p><strong>因此，任何人都无法利用n推出φ(n)。（理论上在太阳爆炸之前可能性极小,不过量子计算机除外）</strong></p>
+<p><strong>φ(n)的值只有Bob自己知道。</strong></p>
+<p>4、Bob构造了一个比1大、比<script type="math/tex">φ(n)</script>小、不等于<script type="math/tex">p_1</script> 或  <script type="math/tex">p_2</script>的整数<script type="math/tex">e</script>。（随机数：多项式时间）</p>
+<p>5、Bob求出了e对于<script type="math/tex">φ(n)</script>的乘法逆元d，也就是说<script type="math/tex">ed ≡ 1（mod φ(n)）</script>，也就是说¥<script type="math/tex">ed=kφ(n)+1</script> (扩展欧几里得，多项式时间)</p>
+<p><strong>请注意！现在神奇的事情发生了！对于一个与n互质的数a：</strong></p>
+<p>因为<script type="math/tex">a^{φ(n)} = 1^{(mod n)}</script></p>
+<p>所以<script type="math/tex">a^{kφ(n)} = 1^{(mod n)}</script></p>
+<p>所以<script type="math/tex">a^{kφ(n)+1} = a^{(mod n)}</script></p>
+<p>所以<script type="math/tex">a^{ed} = a^{mod n}</script></p>
+<p>所以，若<script type="math/tex">c = a^{e(mod n)}</script>,则<script type="math/tex">c^d = a^{ed} = a^{mod n}</script></p>
+<p><span id="jump">到这里，两把钥匙构造完成！！对于窃听者来说，若想破解非对称加密算法，最重要的就是解决质因数分解，对于一个小数字是非常简单的，但是对于1024位的数字进行质因数分解，目前人类还没有做到。</span></p>
+<p>基于这样的一种算法，人类才认为该RSA算法是比较保密的。</p>
+<p>但是有没有什么方式可以快速的进行质因数分解呢。有，那就是量子计算机。普通计算机算十几万年的算力，量子计算机可能只需要几秒。换句话说，如果量子计算机普及，那可能银行系统的加密算法都需要更新。</p>
+<h2 id="量子世界"><a href="#量子世界" class="headerlink" title="量子世界"></a>量子世界</h2><p>我对物理的理解是，它是一个人类用来解释我们身边各种现象的工具，无论是牛顿的经典力学理论，还是波尔开创的量子世界。但是，量子物理是一种和牛顿完全不同的一种观察世界，思考世界的方式。在某一些情况下，牛顿开创的经典力学理论是无法解释的特定现象的，于是量子物理诞生出来。</p>
+<h3 id="量子纠缠与叠加"><a href="#量子纠缠与叠加" class="headerlink" title="量子纠缠与叠加"></a>量子纠缠与叠加</h3><p>为了解释一些概念，我们把量子，比喻成一个兔子🐰，除此之外，我再把一个光子粒子，也比喻成一个量子。（记住这两个量子）</p>
+<p>🐰有🐰的一些特点：体长，体重，公母</p>
+<p>光子也有光子的一些特点：路径，偏振，角动量（也是波尔、包括潘建伟院士实验使用的最重要的三个参数）</p>
+<p>那什么是量子纠缠和量子叠加呢，我们首先看这个兔子，兔子其中有一个属性—公母</p>
+<p>假定现在有两只兔子（一公一母）， 虽然我们现在知道这两只兔子有一个公的有一个母的，但是我们并不知道哪一只公哪一只母，并且，如果第一只是公的，那么第二只一定是母的，如果第一只是母的，第二只一定是公的。可以总结为，他们两个是相互有关系的，是相互纠缠的，那么我们引入概念，这两个量子（兔子）处于纠缠态。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>🐰A</th>
+<th style="text-align:center">公</th>
+<th style="text-align:center">母</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🐰B</td>
+<td style="text-align:center">母</td>
+<td style="text-align:center">公</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>叠加态就更容易理解了，相信看官都听说过薛定谔的猫，在一个盒子里，猫即可能是获得，也可能是死的，在你观测猫时候，猫是以一种即生又死的叠加态组成的。</p>
+<p>在这个例子中，🐰的公和母就是处于一种叠加态的。你测量后，兔子可能是公的，也可能是母的，但是你没有测量之前，兔子既有可能是公的也有可能是母的。</p>
+<p>以上是一个简单的例子，再举一个例子，比如说我们现在有一个<script type="math/tex">\pi</script>介子，他的角动量为零。这个<script type="math/tex">\pi</script>介子可以进行衰变，分别衰变成两个粒子，一个正电荷一个负电荷，分别向两个方向进行发射。 这时，这两个粒子就处在一个纠缠态当中，</p>
+<p>我们知道，衰变的粒子必须满足角动量守恒，也就是最初角动量为0，衰变后的粒子发射出去后必须是反向的。也就是一个粒子如果向上，另一个粒子就一定向下。</p>
+<p>瞧，和刚才我们举的兔子🐰的例子有点像，刚才是一公一母，现在是一上一下，他们都处于纠缠态。</p>
+<p>到现在，叠加态和纠缠态的概念是不是已经很清晰了。那前段时间潘建伟院士团队公布的18比特纠缠又是一个什么概念呢？</p>
+<h3 id="潘建伟量子实验室18bit纠缠"><a href="#潘建伟量子实验室18bit纠缠" class="headerlink" title="潘建伟量子实验室18bit纠缠"></a>潘建伟量子实验室18bit纠缠</h3><p>首先，让我们来会想刚才的例子—光子</p>
+<p>光子有三个特征，路径，偏振，和角动量。在潘佬的实验中，路径，偏振，角动量都只有两种，因为我们知道，比特是计算机的基本单位，一个比特位是有0和1组成的，故潘佬用两种路径、偏振、和角动量两两组合来表示比特的两位。也就是说，路径，偏振，角动量都构成了一个量子比特。路径是一个比特位、偏振是一个比特位、角动量是一个比特位。</p>
+<p>在潘佬的实验中，使用了6个光子，那每个光子都有上述的三个比特（路径，偏振和角动量），6*3=18，也就是一共18个比特。</p>
+<p>为了让这18个比特都纠缠起来，也就是说，每一个光子的路径，都要和其他光子的路径、偏振、角动量以及自己的偏振和角动量 有一定关系。也就是让他们产生关系，产生纠缠，形成纠缠态。</p>
+<p>那潘佬是怎么做到的呢。</p>
+<p><img src="/2020/02/01/从数学之美，到量子世界/18bitshiyan.jpg" alt=""></p>
+<p>看上图的a</p>
+<p>他使用了三明治晶体结构，激光从中间穿过去，再打一个三明治的晶体结构。穿过去，再打一个三明治结构—一共穿过三个晶体结构。</p>
+<p><img src="/2020/02/01/从数学之美，到量子世界/偏振纠缠仪器.jpg" alt=""></p>
+<p>激光在穿过该晶体的时候，会发生光子偏振，如图，光子1和光子2本身就是有关的，也就是这两个是处于偏振纠缠态的，同样3和4、5和6都处于纠缠态。</p>
+<p>因为我们要完成18bit的纠缠，所以我们还要用某些方法把路径和角动量给他纠缠起来，这时候就又用到另外两个装置（PBS和SPP）。</p>
+<p>通过上述两个装置，会将6个光子的路径，偏振、角动量都纠缠起来（具体这几个装置是啥，怎么弄的，别问，问就不知道，只明白能实现这样就效果就好了）。</p>
+<p>下表为6个光子，他们有路径的差别，有偏振的差别，有角动量的差别。我们刚才说过，每一个变量都只有两个值，来表示计算机比特中的0和1。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">A</th>
+<th style="text-align:center">B</th>
+<th style="text-align:center">C</th>
+<th style="text-align:center">D</th>
+<th style="text-align:center">E</th>
+<th style="text-align:center">F</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们来看这个表格，每一个方块儿，都可以表示1和0，那这里一共有18个方块，那他应该可以表示<script type="math/tex">2^{18}</script>这么多的可能。<script type="math/tex">2^{18}</script>的可能也就对应着它可以表示<script type="math/tex">2^{18}</script>个数。</p>
+<p>这时，最重要的一个特点出来啦！！！</p>
+<p>对于冯诺伊曼体系的计算机来说（就是我们现在用的计算机），只能表示<script type="math/tex">2^{18}</script>个数中的一个数。而对于一个量子计算机来说，因为它有纠缠态的特性，量子计算机就可以同时表示<script type="math/tex">2^{18}</script>个数。</p>
+<p>这意味着什么呢，比如我们有一个存储单元，计算机只可以存储一个数，虽然这个数最大可以是<script type="math/tex">2^{18}</script>。而在量子计算机的存储方式中，一个存储单元可以同时存储<script type="math/tex">2^{18}</script>个数。</p>
+<h3 id="量子计算机的应用"><a href="#量子计算机的应用" class="headerlink" title="量子计算机的应用"></a>量子计算机的应用</h3><p>听起来很厉害的样子，具体是如何应用的呢</p>
+<p>量子计算机之所以强大，是因为他可以实现并行计算。在上面提到，密码学中有一个最重要的算法—RSA算法。</p>
+<p>这个算法是基于要揭开密码要进行质因数分解，因为对于一个大数进行质因数是非常困难的，所以安全。但如果我几秒钟就算出来了大数的质因数分解当然就不安全了。</p>
+<p>在量子计算机中，可以吧所有除数同时带入公式中进行查找，看他们有没有余数，如果没有余数说明找到了这两个质数。</p>
+<p>潘建伟说过这样一句话。如果你要实现一个300位的质因数分解，传统计算机需要15万年，量子计算机只需要一秒钟。</p>
+<p>到那时候，量子计算机可以破解目前世界上所有的银行。也就是说，量子计算机如果真的应用日常生活中，对我们的生活冲击是非常大的。除此之外，比特币，区块链这种需要大量算力的而产生高价值的东西也会井喷。</p>
+<p>除了密码学，还有其他应用，比如说在一个数据库中查找所需要的数据，传统的计算机需要一个一个的对比，或者通过某些优化的算法比如二叉树、红黑树进行搜索。但是量子计算机可以同时进行搜索，当前媒体大肆宣称的大数据时代，使用量子计算机可以更好的降低我们搜索数据的过程。Intel公司在之前已经实现了17个比特的量子纠缠，但是那个17个比特的量子纠缠是由17个光子一维的进行实现的，而潘建伟只用了6个光子，在6个光子的基础上实现了量子高纬的纠缠。</p>
+<p>在潘建伟新年的演讲里，他说现在的计算机和所谓的人工智能，都很难有人类的大脑思维，这很大的程度上就是因为人类的思维是并行的，而计算机的处理方式永远是串行的。 </p>
+<p>在未来的某一天，如果我们有量子计算机，可能就可以真正的搞明白人的大脑究竟是怎么回事儿了。</p>
+<p>也许人的思维，其实也是量子化的。</p>
+<hr>
+<p>终于写完了，好累啊= =，我的颈椎又不好了。。。</p>
+<p>拿起手机再看看微博和确诊人数，希望早日战胜疫情吧</p>
+<p>现在贪图名利贪图虚荣的人太多了，能静下心来感受平静生活的人太少了</p>
+<p>祝愿百姓安康，国泰民安。</p>
+<p>2020.2.1 于2020春节冠状病毒大疫期间</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/01/我和她/" rel="next" title="我和她">
+                <i class="fa fa-chevron-left"></i> 我和她
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/10/关于思维模式的一些思考/" rel="prev" title="关于思维模式的一些思考">
+                关于思维模式的一些思考 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/481524115144_.pic.jpg"
+                alt="王振宇" />
+            
+              <p class="site-author-name" itemprop="name">王振宇</p>
+              <p class="site-description motion-element" itemprop="description">每一个不曾起舞的日子都是对生命的辜负。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于质因数分解"><span class="nav-number">1.</span> <span class="nav-text">关于质因数分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于密码学"><span class="nav-number">2.</span> <span class="nav-text">关于密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于对称算法"><span class="nav-number">2.1.</span> <span class="nav-text">关于对称算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于非对称算法"><span class="nav-number">2.2.</span> <span class="nav-text">关于非对称算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于数论以及RSA"><span class="nav-number">3.</span> <span class="nav-text">关于数论以及RSA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#欧拉函数"><span class="nav-number">3.1.</span> <span class="nav-text">欧拉函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#欧拉公式"><span class="nav-number">3.2.</span> <span class="nav-text">欧拉公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#乘法逆元"><span class="nav-number">3.3.</span> <span class="nav-text">乘法逆元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两把钥匙"><span class="nav-number">3.4.</span> <span class="nav-text">两把钥匙</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#量子世界"><span class="nav-number">4.</span> <span class="nav-text">量子世界</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#量子纠缠与叠加"><span class="nav-number">4.1.</span> <span class="nav-text">量子纠缠与叠加</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#潘建伟量子实验室18bit纠缠"><span class="nav-number">4.2.</span> <span class="nav-text">潘建伟量子实验室18bit纠缠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#量子计算机的应用"><span class="nav-number">4.3.</span> <span class="nav-text">量子计算机的应用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">王振宇</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
