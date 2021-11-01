@@ -88,7 +88,7 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2021/10/29/基于ARMA模型的比特币走势预测/a.png">
 <meta property="og:image" content="http://yoursite.com/2021/10/29/基于ARMA模型的比特币走势预测/b.png">
-<meta property="og:updated_time" content="2021-09-29T09:43:17.024Z">
+<meta property="og:updated_time" content="2021-11-01T05:00:15.514Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于ARMA模型的比特币走势预测">
 <meta name="twitter:description" content="2021年十一前的这几天，终于提起兴趣拾起时间把拖了很久的这篇博客更新完，自打进入银行工作以来，发现大部分的决策对数据的依赖少之又少，更多的是靠政策方向、经验感觉和人际关系，或者几个简单的指标判断，借此机会开始学习一些数据挖掘的简单算法，一篇拖更一年的文章向清华大学陈博士致敬。 对于任何带有时间序列性质的课题，都可以尝试用以下模型预测 在选择模型前，需要先确定结果与变量之间的关系。回归分析训练得到">
@@ -310,8 +310,8 @@
               
                 <span class="post-meta-item-text">Post modified&#58;</span>
               
-              <time title="Post modified" itemprop="dateModified" datetime="2021-09-29T17:43:17+08:00">
-                2021-09-29
+              <time title="Post modified" itemprop="dateModified" datetime="2021-11-01T13:00:15+08:00">
+                2021-11-01
               </time>
             
           </span>
@@ -354,7 +354,7 @@
 <p>在选择模型前，需要先确定结果与变量之间的关系。回归分析训练得到的是目标变量 y 与自变量 x的相关性，然后通过新的自变量 x 来预测目标变量 y。而时间序列分析得到的是目标变量 y 与时间的相关性。</p>
 <p>另外，回归分析擅长的是多变量与目标结果之间的分析，即便是单一变量，也往往与时间无关。而时间序列分析建立在时间变化的基础上，它会分析目标变量的趋势、周期、时期和不稳定因素等。这些趋势和周期都是在时间维度的基础上，我们要观察的重要特征。</p>
 <p>时间序列预测关于时间序列，可以把它理解为按照时间顺序组成的数字序列。在时间序列预测模型中，有一些经典的模型，包括 AR、MA、ARMA、ARIMA，AR 的英文全称叫做 Auto Regressive，中文叫自回归模型。这个算法的思想比较简单，它认为过去若干时刻的点通过线性组合，再加上白噪声就可以预测未来某个时刻的点。</p>
-<p>在我们日常生活环境中就存在白噪声，在数据挖掘的过程中，你可以把它理解为一个期望为 0，方差为常数的纯随机过程。AR 模型还存在一个阶数，称为 AR（p）模型，也叫作 p 阶自回归模型。它指的是通过这个时刻点的前 p 个点，通过线性组合再加上白噪声来预测当前时刻点的值。MA 的英文全称叫做 Moving Average，中文叫做滑动平均模型。它与 AR 模型大同小异，AR 模型是历史时序值的线性组合，MA 是通过历史白噪声进行线性组合来影响当前时刻点。AR 模型中的历史白噪声是通过影响历史时序值，从而间接影响到当前时刻点的预测值。同样 MA 模型也存在一个阶数，称为 MA(q) 模型，也叫作 q 阶移动平均模型。我们能看到 AR 和 MA 模型都存在阶数，在 AR 模型中，我们用 p 表示，在 MA 模型中我们用 q 表示，这两个模型大同小异，与 AR 模型不同的是 MA 模型是历史白噪声的线性组合。</p>
+<p>在我们日常生活环境中就存在白噪声，在数据挖掘的过程中，可以把它理解为一个期望为 0，方差为常数的纯随机过程。AR 模型还存在一个阶数，称为 AR（p）模型，也叫作 p 阶自回归模型。它指的是通过这个时刻点的前 p 个点，通过线性组合再加上白噪声来预测当前时刻点的值。MA 的英文全称叫做 Moving Average，中文叫做滑动平均模型。它与 AR 模型大同小异，AR 模型是历史时序值的线性组合，MA 是通过历史白噪声进行线性组合来影响当前时刻点。AR 模型中的历史白噪声是通过影响历史时序值，从而间接影响到当前时刻点的预测值。同样 MA 模型也存在一个阶数，称为 MA(q) 模型，也叫作 q 阶移动平均模型。我们能看到 AR 和 MA 模型都存在阶数，在 AR 模型中，我们用 p 表示，在 MA 模型中我们用 q 表示，这两个模型大同小异，与 AR 模型不同的是 MA 模型是历史白噪声的线性组合。</p>
 <p>ARMA 的英文全称是 Auto Regressive Moving Average，中文叫做自回归滑动平均模型，也就是 AR 模型和 MA 模型的混合。相比 AR 模型和 MA 模型，它有更准确的估计。同样 ARMA 模型存在 p 和 q 两个阶数，称为 ARMA(p,q) 模型。ARIMA 的英文全称是 Auto Regressive Integrated Moving Average 模型，中文叫差分自回归滑动平均模型，也叫求合自回归滑动平均模型。相比于 ARMA，ARIMA 多了一个差分的过程，作用是对不平稳数据进行差分平稳，在差分平稳后再进行建模。ARIMA 的原理和 ARMA 模型一样。相比于 ARMA(p,q) 的两个阶数，ARIMA 是一个三元组的阶数 (p,d,q)，称为 ARIMA(p,d,q) 模型。其中 d 是差分阶数。</p>
 <p>ARMA 模型工具上面介绍的 AR，MA，ARMA，ARIMA 四种模型，你只需要了解基础概念即可，中间涉及到的一些数学公式这里不进行展开。在实际工作中，我们更多的是使用工具，我在这里主要讲解下如何使用 ARMA 模型工具。在使用 ARMA 工具前，你需要先引用相关工具包：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> statsmodels.tsa.arima_model <span class="keyword">import</span> ARMA</span><br></pre></td></tr></table></figure>
